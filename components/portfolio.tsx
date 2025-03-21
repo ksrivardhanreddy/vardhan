@@ -173,6 +173,7 @@ export function Portfolio() {
                 href="https://github.com/ksrivardhanreddy"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="My GitHub"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
                <img src="/icons/github-logo.svg" alt="X Logo" className="h-6 w-6" /> 
@@ -181,6 +182,7 @@ export function Portfolio() {
                 href="https://linkedin.com/in/srivardhanreddykolan"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="LinkedIn Profile"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
                 <img src="/icons/in-logo.svg" alt="X Logo" className="h-6 w-6" /> 
@@ -189,6 +191,7 @@ export function Portfolio() {
                 href="https://x.com/srieevardhan"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="X.com"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
                 <img src="/icons/x-logo.svg" alt="X Logo" className="h-6 w-6" /> 
@@ -197,12 +200,14 @@ export function Portfolio() {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
+                title="View Resume"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
                 <FileText className="h-6 w-6" />
               </a>
               <a
                 href="mailto:sri@srivardhanreddy.com"
+                title="Email ME"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
                 <Mail className="h-6 w-6" />
