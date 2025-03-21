@@ -170,7 +170,7 @@ export function Portfolio() {
             </p>
             <div className="flex justify-center gap-4">
               <a
-                href="https://github.com"
+                href="https://github.com/ksrivardhanreddy"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
@@ -178,7 +178,7 @@ export function Portfolio() {
                <img src="/icons/github-logo.svg" alt="X Logo" className="h-6 w-6" /> 
               </a>
               <a
-                href="https://linkedin.com"
+                href="www.linkedin.com/in/srivardhanreddykolan"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
@@ -186,7 +186,7 @@ export function Portfolio() {
                 <img src="/icons/in-logo.svg" alt="X Logo" className="h-6 w-6" /> 
               </a>
               <a
-                href="https://x.com"
+                href="https://x.com/srieevardhan"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
@@ -202,7 +202,7 @@ export function Portfolio() {
                 <FileText className="h-6 w-6" />
               </a>
               <a
-                href="mailto:contact@example.com"
+                href="mailto:sri@srivardhanreddy.com"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
                 <Mail className="h-6 w-6" />
