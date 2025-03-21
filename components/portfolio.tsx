@@ -178,7 +178,7 @@ export function Portfolio() {
                <img src="/icons/github-logo.svg" alt="X Logo" className="h-6 w-6" /> 
               </a>
               <a
-                href="www.linkedin.com/in/srivardhanreddykolan"
+                href="https://linkedin.com/in/srivardhanreddykolan"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
