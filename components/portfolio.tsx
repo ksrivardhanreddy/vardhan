@@ -296,6 +296,8 @@ export function Portfolio() {
               </a>
               <a
                 href="https://hashnode.vardhan.pro/"
+                target="_blank"
+                rel="noopener noreferrer"
                 title="Hashnode Blog"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
@@ -336,22 +338,22 @@ export function Portfolio() {
 
       {/* Experience Section */}
       <section id="experience" className="py-20 px-6 max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold mb-12 text-center">Experience</h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {experience.map((exp, index) => (
-            <Card key={index} className="bg-card/50 backdrop-blur">
-              <CardHeader>
-                <CardTitle>{exp.title}</CardTitle>
-                <p className="text-sm text-muted-foreground">{exp.company}</p>
-                <Badge>{exp.period}</Badge>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm">{exp.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+  <h2 className="text-3xl font-bold mb-12 text-center">Experience</h2>
+  <div className="grid gap-6 md:grid-cols-2">
+    {experience.map((exp, index) => (
+      <Card key={index} className="bg-card/50 backdrop-blur">
+        <CardHeader>
+          <CardTitle>{exp.title}</CardTitle>
+          <p className="text-sm text-muted-foreground">{exp.company}</p>
+          <Badge>{exp.period}</Badge>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm">{exp.description}</p>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+</section>
 
       {/* Projects Section */}
       <section id="projects" className="py-20 px-6 bg-secondary/50 backdrop-blur">
