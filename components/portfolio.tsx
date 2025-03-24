@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useTheme } from 'next-themes';
+import Link from "next/link";
 import { useEffect, useState } from 'react';
 import {
   Accordion,
@@ -56,17 +57,21 @@ export function Portfolio() {
       issuer: 'Amazon Web Services',
       date: '2024',
       badge: '/images/AWS-SAA.png',
+      link: 'https://www.credly.com/badges/dfb30d20-556c-4737-b9f7-f876e98e3989',
     },
     {
       name: 'Certified Kubernetes Administrator (CKA)',
       issuer: 'Cloud Native Computing Foundation',
       date: '2024',
       badge: '/images/CKA.png',
+      link: 'https://www.credly.com/badges/53f1f54f-e8bd-4433-8ace-11816a98ee42',
     },
     {
       name: 'Red Hat Certified Engineer (RHCE)',
+      issuer: 'RedHat CertID: 180-109-324',
       date: '2018',
       badge: '/images/rhce.png',
+      link: 'https://rhtapps.redhat.com/verify?certId=180-109-324',
     },
   ];
 
@@ -272,26 +277,26 @@ export function Portfolio() {
                 <img src="/icons/in-logo.svg" alt="LinkedIn Logo" className="h-6 w-6" />
               </a>
               <a
-                href="https://x.com/srieevardhan"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="X.com"
-                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
-              >
-                <img src="/icons/x-logo.svg" alt="X Logo" className="h-6 w-6" />
-              </a>
-              <a
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="View Resume"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
-                <FileText className="h-6 w-6" />
+                <img src="/icons/cv.png" alt="X Logo" className="h-6 w-6"/>
+              </a>
+              <a
+                href="https://x.com/srieevardhan"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Follow me on X.com"
+                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
+              >
+                <img src="/icons/x-logo.svg" alt="X Logo" className="h-6 w-6" />
               </a>
               <a
                 href="https://hashnode.vardhan.pro/"
-                title="Hashnode"
+                title="Hashnode Blog"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
                 <img src="/icons/hashnode-icon.png" alt="X Logo" className="h-6 w-6" />
@@ -396,33 +401,40 @@ export function Portfolio() {
       </section>
 
       {/* Certifications Section */}
-      <section id="certifications" className="py-20 px-6 bg-secondary/50 backdrop-blur">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-12 text-center">
-            Certifications
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {certifications.map((cert, index) => (
-              <Card key={index} className="bg-card/50 backdrop-blur">
-                <CardHeader className="flex flex-row items-center gap-4">
-                  <img
-                    src={cert.badge}
-                    alt={cert.name}
-                    className="w-16 h-16 rounded-lg object-cover"
-                  />
-                  <div>
-                    <CardTitle className="text-lg">{cert.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {cert.issuer}
-                    </p>
-                    <Badge>{cert.date}</Badge>
-                  </div>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+<section id="certifications" className="py-20 px-6 bg-secondary/50 backdrop-blur">
+  <div className="max-w-6xl mx-auto">
+    <h2 className="text-3xl font-bold mb-12 text-center">
+      Certifications
+    </h2>
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {certifications.map((cert, index) => (
+        <Link href={cert.link} target="_blank" rel="noopener noreferrer" key={index}>
+          <Card className="bg-card/50 backdrop-blur transition-all duration-300 hover:shadow-lg group relative">
+            <CardHeader className="flex flex-row items-center gap-4">
+              <div className="relative">
+                <img
+                  src={cert.badge}
+                  alt={cert.name}
+                  className="w-16 h-16 rounded-lg object-cover object-center flex-shrink-0"
+                />
+                <div className="absolute inset-0 bg-black/70 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-white text-xs font-medium">Verify</span>
+                </div>
+              </div>
+              <div>
+                <CardTitle className="text-lg">{cert.name}</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {cert.issuer}
+                </p>
+                <Badge>{cert.date}</Badge>
+              </div>
+            </CardHeader>
+          </Card>
+        </Link>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* Contact Section */}
       <section id="contact" className="py-20 px-6 bg-secondary/50 backdrop-blur">
