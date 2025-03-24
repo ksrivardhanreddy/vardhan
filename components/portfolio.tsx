@@ -8,7 +8,8 @@ import {
   Mail,
   Moon,
   Sun,
-  ChevronDown,
+  Menu,
+  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,14 +22,33 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 export function Portfolio() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsOpen(false); // Close mobile menu after clicking
+    }
+  };
+
+  const navigationItems = [
+    { label: 'Home', id: 'home' },
+    { label: 'About', id: 'about' },
+    { label: 'Experience', id: 'experience' },
+    { label: 'Projects', id: 'projects' },
+    { label: 'Certifications', id: 'certifications' },
+    { label: 'Contact', id: 'contact' }
+  ];
 
   const certifications = [
     {
@@ -45,7 +65,6 @@ export function Portfolio() {
     },
     {
       name: 'Red Hat Certified Engineer (RHCE)',
-      // issuer: 'Red Hat',
       date: '2018',
       badge: '/images/rhce.png',
     },
@@ -128,27 +147,94 @@ export function Portfolio() {
     }
   ];
 
+  const aboutContent = {
+    title: "About Me",
+    description: "I am a passionate DevOps Engineer with over 10 years of experience in the industry. My journey in technology has been focused on building and optimizing infrastructure, automating processes, and implementing modern DevOps practices. I have a strong background in cloud technologies, particularly AWS, and extensive experience with containerization and orchestration using Kubernetes.",
+    skills: [
+      "AWS Cloud Infrastructure",
+      "Kubernetes & Container Orchestration",
+      "Infrastructure as Code (Terraform, CloudFormation)",
+      "CI/CD Pipeline Development",
+      "Automation & Scripting",
+      "Security & Compliance",
+      "Monitoring & Observability",
+      "Problem Solving & Troubleshooting"
+    ],
+    interests: [
+      "Cloud Native Technologies",
+      "Infrastructure Automation",
+      "DevSecOps",
+      "Continuous Learning",
+      "Technology Innovation"
+    ]
+  };
+
   if (!mounted) {
     return null;
   }
 
+  const NavItems = ({ className = "", onClick }: { className?: string, onClick?: () => void }) => (
+    <>
+      {navigationItems.map((item) => (
+        <button
+          key={item.id}
+          onClick={() => {
+            scrollToSection(item.id);
+            onClick?.();
+          }}
+          className={`text-sm font-medium text-muted-foreground hover:text-foreground transition-colors relative group ${className}`}
+        >
+          {item.label}
+          <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
+        </button>
+      ))}
+    </>
+  );
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-background to-secondary">
-      {/* Theme Toggle */}
-      <button
-        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        className="fixed top-4 right-4 z-50 p-2 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:scale-110 transition-transform duration-200"
-      >
-        {theme === 'dark' ? (
-          <Sun className="h-6 w-6 text-yellow-500" />
-        ) : (
-          <Moon className="h-6 w-6 text-gray-700" />
-        )}
-      </button>
+      {/* Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/50">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          {/* Mobile Menu */}
+          <div className="lg:hidden">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[240px] sm:w-[300px]">
+                <div className="flex flex-col gap-6 mt-8">
+                  <NavItems className="flex flex-col items-start gap-4" onClick={() => setIsOpen(false)} />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex items-center justify-center gap-8 flex-1">
+            <NavItems />
+          </div>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="p-2 rounded-full hover:bg-accent"
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <div
-        className="h-screen relative flex items-center justify-center"
+      <section
+        id="home"
+        className="h-screen relative flex items-center justify-center pt-16"
         style={{
           backgroundImage:
             "url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')",
@@ -165,9 +251,7 @@ export function Portfolio() {
               className="rounded-full w-40 h-40 mx-auto mb-6 border-4 border-primary"
             />
             <h1 className="text-4xl font-bold mb-4">SRIVARDHAN REDDY KOLAN</h1>
-            <p className="text-xl mb-6">
-              Senior DevOps Engineer
-            </p>
+            <p className="text-xl mb-6">Senior DevOps Engineer</p>
             <div className="flex justify-center gap-4">
               <a
                 href="https://github.com/ksrivardhanreddy"
@@ -176,7 +260,7 @@ export function Portfolio() {
                 title="My GitHub"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
-               <img src="/icons/github-logo.svg" alt="X Logo" className="h-6 w-6" /> 
+                <img src="/icons/github-logo.svg" alt="GitHub Logo" className="h-6 w-6" />
               </a>
               <a
                 href="https://linkedin.com/in/srivardhanreddykolan"
@@ -185,7 +269,7 @@ export function Portfolio() {
                 title="LinkedIn Profile"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
-                <img src="/icons/in-logo.svg" alt="X Logo" className="h-6 w-6" /> 
+                <img src="/icons/in-logo.svg" alt="LinkedIn Logo" className="h-6 w-6" />
               </a>
               <a
                 href="https://x.com/srieevardhan"
@@ -194,7 +278,7 @@ export function Portfolio() {
                 title="X.com"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
-                <img src="/icons/x-logo.svg" alt="X Logo" className="h-6 w-6" /> 
+                <img src="/icons/x-logo.svg" alt="X Logo" className="h-6 w-6" />
               </a>
               <a
                 href="/resume.pdf"
@@ -207,7 +291,7 @@ export function Portfolio() {
               </a>
               <a
                 href="mailto:sri@srivardhanreddy.com"
-                title="Email ME"
+                title="Email Me"
                 className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
               >
                 <Mail className="h-6 w-6" />
@@ -215,10 +299,38 @@ export function Portfolio() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold mb-12 text-center">{aboutContent.title}</h2>
+          <div className="bg-card/50 backdrop-blur rounded-lg p-8 space-y-8">
+            <p className="text-lg leading-relaxed">{aboutContent.description}</p>
+            
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Technical Skills</h3>
+              <div className="flex flex-wrap gap-2">
+                {aboutContent.skills.map((skill, index) => (
+                  <Badge key={index} variant="secondary">{skill}</Badge>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-semibold mb-4">Interests</h3>
+              <div className="flex flex-wrap gap-2">
+                {aboutContent.interests.map((interest, index) => (
+                  <Badge key={index}>{interest}</Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Experience Section */}
-      <section className="py-20 px-6 max-w-6xl mx-auto">
+      <section id="experience" className="py-20 px-6 max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center">Experience</h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {experience.map((exp, index) => (
@@ -237,7 +349,7 @@ export function Portfolio() {
       </section>
 
       {/* Projects Section */}
-      <section className="py-20 px-6 bg-secondary/50 backdrop-blur">
+      <section id="projects" className="py-20 px-6 bg-secondary/50 backdrop-blur">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold mb-12 text-center">Projects</h2>
           <Accordion type="single" collapsible className="w-full space-y-4">
@@ -284,7 +396,7 @@ export function Portfolio() {
       </section>
 
       {/* Certifications Section */}
-      <section className="py-20 px-6 bg-secondary/50 backdrop-blur">
+      <section id="certifications" className="py-20 px-6 bg-secondary/50 backdrop-blur">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold mb-12 text-center">
             Certifications
@@ -308,6 +420,30 @@ export function Portfolio() {
                 </CardHeader>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-20 px-6 bg-secondary/50 backdrop-blur">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Get in Touch</h2>
+          <p className="text-lg mb-8">
+            I'm always interested in hearing about new opportunities and collaborations.
+          </p>
+          <div className="flex justify-center gap-6">
+            <Button asChild variant="outline" className="group">
+              <a href="mailto:sri@srivardhanreddy.com">
+                <Mail className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                Email Me
+              </a>
+            </Button>
+            <Button asChild variant="outline" className="group">
+              <a href="https://linkedin.com/in/srivardhanreddykolan" target="_blank" rel="noopener noreferrer">
+                <Linkedin className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                Connect on LinkedIn
+              </a>
+            </Button>
           </div>
         </div>
       </section>
