@@ -258,7 +258,7 @@ export function Portfolio() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="My GitHub"
-                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
+                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
                 <img src="/icons/github-logo.svg" alt="GitHub Logo" className="h-6 w-6" />
               </a>
@@ -267,7 +267,7 @@ export function Portfolio() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="LinkedIn Profile"
-                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
+                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
                 <img src="/icons/in-logo.svg" alt="LinkedIn Logo" className="h-6 w-6" />
               </a>
@@ -276,7 +276,7 @@ export function Portfolio() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="X.com"
-                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
+                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
                 <img src="/icons/x-logo.svg" alt="X Logo" className="h-6 w-6" />
               </a>
@@ -285,16 +285,16 @@ export function Portfolio() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="View Resume"
-                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
+                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
                 <FileText className="h-6 w-6" />
               </a>
               <a
-                href="mailto:sri@srivardhanreddy.com"
-                title="Email Me"
-                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-black"
+                href="https://hashnode.vardhan.pro/"
+                title="Hashnode"
+                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
               >
-                <Mail className="h-6 w-6" />
+                <img src="/icons/hashnode-icon.png" alt="X Logo" className="h-6 w-6" />
               </a>
             </div>
           </div>
@@ -432,12 +432,29 @@ export function Portfolio() {
             I'm always interested in hearing about new opportunities and collaborations.
           </p>
           <div className="flex justify-center gap-6">
-            <Button asChild variant="outline" className="group">
-              <a href="mailto:sri@srivardhanreddy.com">
-                <Mail className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
-                Email Me
-              </a>
-            </Button>
+          <Button 
+  variant="outline" 
+  className="group"
+  onClick={(e) => {
+    e.preventDefault();
+    navigator.clipboard.writeText("sri@srivardhanreddy.com");
+    
+    // Create and display a toast notification
+    const toast = document.createElement("div");
+    toast.className = "fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-md shadow-md transition-opacity duration-300";
+    toast.innerText = "Email copied to clipboard!";
+    document.body.appendChild(toast);
+    
+    // Remove the toast after 2 seconds
+    setTimeout(() => {
+      toast.classList.add("opacity-0");
+      setTimeout(() => document.body.removeChild(toast), 300);
+    }, 2000);
+  }}
+>
+  <Mail className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" /> 
+  Email Me
+</Button>
             <Button asChild variant="outline" className="group">
               <a href="https://linkedin.com/in/srivardhanreddykolan" target="_blank" rel="noopener noreferrer">
                 <Linkedin className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
