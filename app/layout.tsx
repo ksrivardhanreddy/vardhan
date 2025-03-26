@@ -5,6 +5,11 @@ import favicon from '/favicon.ico';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const metadata = {
+  title: "Vardhan Portfolio",
+  description: "Welcome to my portfolio website",
+};
+
 export default function RootLayout({
   children,
 }: {

@@ -62,7 +62,7 @@ export function Portfolio() {
     {
       name: 'Certified Kubernetes Administrator (CKA)',
       issuer: 'Cloud Native Computing Foundation',
-      date: '2024',
+      date: '2025',
       badge: '/images/CKA.png',
       link: 'https://www.credly.com/badges/53f1f54f-e8bd-4433-8ace-11816a98ee42',
     },
