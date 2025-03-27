@@ -109,7 +109,7 @@ export function Portfolio() {
     {
       title: 'Kubernetes Multi-Cloud Infrastructure',
       description: 'Designed and implemented a highly available Kubernetes cluster across multiple cloud providers (AWS and GCP) using Terraform and Ansible.',
-      technologies: ['Kubernetes', 'Terraform', 'Ansible', 'AWS', 'GCP', 'Helm'],
+      technologies: ['Kubernetes', 'Terraform', 'Ansible', 'AWS', 'GCP','Azure', 'Helm'],
       highlights: [
         'Implemented auto-scaling policies for optimal resource utilization',
         'Set up multi-region disaster recovery procedures',
@@ -277,7 +277,7 @@ export function Portfolio() {
                 <img src="/icons/in-logo.svg" alt="LinkedIn Logo" className="h-6 w-6" />
               </a>
               <a
-                href="/resume.pdf"
+                href="/SrivardhanReddy-Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="View Resume"
