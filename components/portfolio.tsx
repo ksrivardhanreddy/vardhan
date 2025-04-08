@@ -257,7 +257,7 @@ export function Portfolio() {
             />
             <h1 className="text-4xl font-bold mb-4">SRIVARDHAN REDDY KOLAN</h1>
             <p className="text-xl mb-6">Senior DevOps Engineer</p>
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center gap-4 items-center">
               <a
                 href="https://github.com/ksrivardhanreddy"
                 target="_blank"
@@ -281,9 +281,9 @@ export function Portfolio() {
                 target="_blank"
                 rel="noopener noreferrer"
                 title="View Resume"
-                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white"
+                className="bg-white/10 p-3 rounded-full hover:bg-white/20 hover:scale-110 transition-all duration-300 text-white hover:text-white transform scale-125"
               >
-                <img src="/icons/cv.png" alt="X Logo" className="h-6 w-6"/>
+                <img src="/icons/cv.png" alt="CV Logo" className="h-10 w-10"/>
               </a>
               <a
                 href="https://x.com/srieevardhan"
