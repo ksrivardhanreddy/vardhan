@@ -253,7 +253,7 @@ export function Portfolio() {
             <img
               src="/images/my-photo.png"
               alt="Profile"
-              className="rounded-full w-40 h-40 mx-auto mb-6 border-4 border-primary"
+              className="rounded-full w-60 h-60 mx-auto mb-6 border-4 border-primary"
             />
             <h1 className="text-4xl font-bold mb-4">SRIVARDHAN REDDY KOLAN</h1>
             <p className="text-xl mb-6">Senior DevOps Engineer</p>
@@ -478,6 +478,11 @@ export function Portfolio() {
           </div>
         </div>
       </section>
+      {/* Footer Section */}
+      <footer className="py-4 text-center text-muted-foreground bg-secondary/50 backdrop-blur border-t border-border/50">
+        &copy; 2025 Srivardhan Reddy Kolan. All rights reserved.
+      </footer>
+
     </main>
   );
 }

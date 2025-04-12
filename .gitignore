@@ -13,6 +13,10 @@
 /.next/
 /out/
 
+#firebase studio
+.idx/
+.vscode/
+
 # production
 /build
 
