@@ -77,9 +77,16 @@ export function Portfolio() {
 
   const experience = [
     {
+      title: 'Technical Analyst - DevOps',
+      company: 'Nemetschek Group',
+      period: '2025 - Present',
+      description:
+        "Specializing in architecting and executing sophisticated DevOps strategies for a product-driven organization. Navigating intricate issues in AWS with EKS environments and implementing scalable infrastructure with Terraform. My expertise includes building and optimizing CI/CD workflows using GitLab and GitHub Actions, ensuring efficient and resilient software delivery.",
+    },
+    {
       title: 'Senior DevOps Engineer',
       company: 'MKS Vision Pvt Ltd.',
-      period: '2024 - Present',
+      period: '2024 - 2025',
       description:
         "Managing DevOps operations in the Fintech domain, leveraging AWS as the cloud platform. Experienced in Kubernetes for container orchestration, Jenkins for CI, and ArgoCD for CD. Automating infrastructure provisioning and configuration using Terraform and Ansible, ensuring scalability, security, and high availability. Focused on enhancing CI/CD pipelines, optimizing cloud infrastructure, and driving automation to improve deployment efficiency and system reliability.",
     },
