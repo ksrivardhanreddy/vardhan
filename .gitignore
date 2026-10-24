@@ -22,6 +22,7 @@
 
 # misc
 .DS_Store
+/tmp/
 *.pem
 
 # debug
@@ -38,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local source resumes and generated review/backup artifacts
+/SrivardhanReddy-Resume.pdf
+/Srivardhan_Reddy_Nemetschek_Bluebeam_Resume.pdf
+/output/
+/archives/
