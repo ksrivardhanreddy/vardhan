@@ -3109,3 +3109,357 @@ details[open] .job-details summary > svg,
     padding-top: 48px;
   }
 }
+
+/* Lazy portfolio assistant. Launcher stays above the existing page-jump control. */
+.ai-launcher {
+  position: fixed;
+  z-index: 60;
+  right: 24px;
+  bottom: 112px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 18px;
+  border: 1px solid var(--orange);
+  border-radius: 30px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 4px 20px #0002;
+  cursor: pointer;
+}
+.ai-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0004;
+}
+.ai-panel,
+.ai-loading-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 100px;
+  width: 440px;
+  max-width: calc(100vw - 24px);
+  height: min(760px, calc(100dvh - 125px));
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 16px 65px #0004;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.ai-loading-panel {
+  z-index: 100;
+  height: auto;
+  padding: 24px;
+}
+.ai-header {
+  padding: 22px 20px 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.ai-header h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.7px;
+}
+.ai-header .ai-eyebrow {
+  color: var(--orange);
+  font: 11px/1.6 monospace;
+  margin-bottom: 6px;
+}
+.ai-header-actions {
+  display: flex;
+  align-items: center;
+}
+.ai-header button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.ai-description {
+  font-size: 15px;
+  line-height: 1.6;
+  padding: 14px 20px 8px;
+}
+.ai-trust {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+  padding: 0 20px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.ai-messages {
+  flex: 1;
+  min-height: 100px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px 16px;
+}
+.ai-welcome > p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.ai-suggestions {
+  display: grid;
+  gap: 8px;
+}
+.ai-suggestions button {
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  cursor: pointer;
+}
+.ai-suggestions svg {
+  flex-shrink: 0;
+}
+.ai-message {
+  padding: 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.ai-message-user {
+  background: var(--surface-alt);
+  margin-left: 20px;
+}
+.ai-message-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--orange);
+  margin-bottom: 8px;
+}
+.ai-message-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  line-height: 1.75;
+}
+.ai-sources {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 16px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.ai-sources p {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.ai-sources ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.ai-sources li {
+  margin-bottom: 8px;
+}
+.ai-sources a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+.ai-status {
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 0 20px;
+  color: var(--muted);
+}
+.ai-status button {
+  text-decoration: underline;
+  min-height: 44px;
+}
+.ai-form {
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.ai-form > label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 7px;
+}
+.ai-form .ai-opt-in {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: 14px;
+}
+.ai-opt-in input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--orange);
+}
+.ai-form textarea {
+  display: block;
+  width: 100%;
+  resize: none;
+  max-height: 120px;
+  min-height: 70px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.ai-form textarea::placeholder {
+  color: var(--muted);
+}
+.ai-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 9px;
+}
+.ai-form-footer > span {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.ai-form-footer button {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 14px;
+  background: var(--orange);
+  color: var(--bg);
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.ai-panel button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.ai-footer {
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--muted);
+  padding: 10px 16px;
+  flex-shrink: 0;
+}
+.ai-footer a {
+  text-decoration: underline;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+}
+.ai-verification {
+  max-width: 100%;
+  overflow-x: auto;
+}
+@media (max-width: 600px) {
+  .ai-launcher {
+    right: 16px;
+    bottom: 100px;
+    font-size: 14px;
+  }
+  .ai-panel {
+    inset: 8px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: auto;
+    max-width: none;
+    height: auto;
+    max-height: calc(100dvh - 16px);
+    border-radius: 12px;
+  }
+  .ai-header {
+    padding: 14px 14px 10px;
+  }
+  .ai-trust {
+    font-size: 12px;
+  }
+  .ai-description {
+    padding-top: 10px;
+  }
+  .ai-messages {
+    min-height: 60px;
+  }
+}
+@media (max-height: 620px) {
+  .ai-description,
+  .ai-trust {
+    display: none;
+  }
+  .ai-panel {
+    bottom: 8px;
+    top: 8px;
+    height: auto;
+  }
+}
+@media (max-height: 620px) {
+  .ai-trust {
+    display: block;
+    font-size: 11px;
+    padding: 8px 16px;
+  }
+}
+@media (max-height: 500px) {
+  .ai-panel {
+    overflow-y: auto;
+  }
+  .ai-messages {
+    flex: none;
+    max-height: 35dvh;
+    min-height: 40px;
+  }
+  .ai-eyebrow {
+    display: none;
+  }
+  .ai-header {
+    padding: 8px 12px;
+  }
+}
+.recruiter-facts {
+  margin: 28px 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  scroll-margin-top: 110px;
+}
+.recruiter-facts h3 {
+  font-size: 21px;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+.contact-section .recruiter-facts p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin: 8px 0;
+}

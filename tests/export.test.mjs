@@ -54,9 +54,11 @@ test("semantic title, social metadata and structured data are emitted", () => {
 });
 test("public content preserves evidence boundaries and private drafts stay unpublished", () => {
   assert.match(html, /Previously earned · expired/);
+  assert.match(html, /10\+ years of IT experience/);
+  assert.match(html, /8\+ years in DevOps/);
   assert.match(html, /Completed evaluation/);
   assert.match(html, /Professional · public-safe/);
-  assert.doesNotMatch(html, /ASUS NUC|vLLM|10\+|8\+/);
+  assert.doesNotMatch(html, /ASUS NUC|vLLM/);
   assert.match(html, /Engineering obstacle/);
   for (const [, attrs] of html.matchAll(/<a\b([^>]*target="_blank"[^>]*)>/g))
     assert.match(attrs, /rel="noopener noreferrer"/);

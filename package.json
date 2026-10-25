@@ -6,11 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "node scripts/serve-export.mjs",
-    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint app components content hooks lib --max-warnings=0",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint app components content hooks lib functions cloudflare --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "node --test tests/*.test.mjs",
-    "format:check": "prettier --check \"app/**/*.{ts,tsx,css}\" components/portfolio.tsx \"components/lab/**/*.tsx\" \"content/**/*.ts\" next.config.js package.json \"tests/*.mjs\" docs/engineering-lab-authoring.md docs/templates/lab-article-template.md scripts/serve-export.mjs",
-    "check": "npm run format:check && npm run lint && npm run typecheck && npm run build && npm test"
+    "test": "node --import tsx --test tests/*.test.mjs tests/portfolio-ai/*.test.ts",
+    "format:check": "prettier --check \"app/**/*.{ts,tsx,css}\" components/portfolio.tsx \"components/lab/**/*.tsx\" \"content/**/*.ts\" next.config.js package.json \"tests/*.mjs\" docs/engineering-lab-authoring.md docs/templates/lab-article-template.md scripts/serve-export.mjs \"components/portfolio-ai/**/*.{ts,tsx}\" \"lib/portfolio-ai/*.ts\" \"functions/**/*.ts\" \"cloudflare/*.ts\" \"scripts/*knowledge*.mjs\" \"tests/portfolio-ai/*.ts\" scripts/serve-assistant-preview.mjs scripts/evaluate-assistant.mjs",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run build && npm test",
+    "predev": "node --import tsx scripts/build-knowledge-index.mjs",
+    "prebuild": "node --import tsx scripts/build-knowledge-index.mjs",
+    "postbuild": "node scripts/validate-knowledge-links.mjs",
+    "start:ai-mock": "node --import tsx scripts/serve-assistant-preview.mjs",
+    "evaluate:ai": "node --import tsx scripts/evaluate-assistant.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
@@ -79,6 +84,9 @@
     "@types/d3-shape": "^3.1.7",
     "@types/d3-time": "^3.0.4",
     "@types/d3-timer": "^3.0.2",
-    "prettier": "^3.6.2"
+    "marked": "^15.0.12",
+    "prettier": "^3.6.2",
+    "tsx": "^4.23.15",
+    "yaml": "^2.9.1"
   }
 }

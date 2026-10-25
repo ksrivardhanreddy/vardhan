@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { AiAssistant } from "@/components/portfolio-ai/AiAssistant";
 import { Providers } from "./providers";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.vardhan.pro"),
@@ -43,7 +44,10 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <AiAssistant />
+        </Providers>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LabCard } from "@/components/lab/lab-card";
+import { ownerCareerProfile, education } from "@/content/ai/owner-profile";
 import type { LabCardData } from "@/content/lab/types";
 import { CommandDemo, commandDemos } from "@/components/command-demo";
 import { useTheme } from "next-themes";
@@ -674,8 +675,7 @@ export function Portfolio({ labFeatures }: { labFeatures: LabCardData[] }) {
           <div className="education">
             <span>EDUCATION</span>
             <p>
-              Bachelor’s in Computer Science and Mathematics{" "}
-              <span>· Osmania University, Hyderabad</span>
+              {education.degree} <span>· {education.institution}</span>
             </p>
           </div>
         </section>
@@ -695,6 +695,22 @@ export function Portfolio({ labFeatures }: { labFeatures: LabCardData[] }) {
                   <br />
                   I’m happy to compare notes.
                 </p>
+                <div id="opportunities" className="recruiter-facts">
+                  <h3>Career &amp; Opportunities</h3>
+                  <p>
+                    {ownerCareerProfile.totalItExperience};{" "}
+                    {ownerCareerProfile.devopsExperience}.
+                  </p>
+                  <p>
+                    {ownerCareerProfile.availability}. Notice period:{" "}
+                    {ownerCareerProfile.noticePeriod}.
+                  </p>
+                  <p>{ownerCareerProfile.sponsorship}.</p>
+                  <p>{ownerCareerProfile.motivation}.</p>
+                  {ownerCareerProfile.workPreferences && (
+                    <p>{ownerCareerProfile.workPreferences}.</p>
+                  )}
+                </div>
                 <a className="contact-email" href={`mailto:${profile.email}`}>
                   {profile.email}
                   <ArrowUpRight size={25} />

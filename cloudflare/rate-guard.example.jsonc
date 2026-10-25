@@ -1,0 +1,12 @@
+// EXAMPLE ONLY. Not the Pages config. Requires explicit resource/deployment approval.
+{
+  "name": "vardhan-ai-rate-guard",
+  "main": "ai-rate-guard.ts",
+  "compatibility_date": "2026-10-25",
+  "workers_dev": false,
+  "preview_urls": false,
+  "ratelimits": [
+    { "name": "VISITOR_LIMIT", "namespace_id": "77101", "simple": { "limit": 5, "period": 60 } },
+    { "name": "GLOBAL_LIMIT", "namespace_id": "77102", "simple": { "limit": 30, "period": 60 } }
+  ]
+}
