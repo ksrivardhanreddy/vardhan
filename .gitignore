@@ -45,3 +45,7 @@ next-env.d.ts
 /Srivardhan_Reddy_Nemetschek_Bluebeam_Resume.pdf
 /output/
 /archives/
+
+# Private local agent context (never publish)
+/AGENTS.md
+/agents.md
