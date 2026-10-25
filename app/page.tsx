@@ -1,5 +1,6 @@
 import { Portfolio } from "@/components/portfolio";
 import { profile } from "@/content/portfolio";
+import { publishedLabArticles, toLabCard } from "@/content/lab/articles";
 export default function Page() {
   const person = {
     "@context": "https://schema.org",
@@ -24,7 +25,11 @@ export default function Page() {
           __html: JSON.stringify(person).replace(/</g, "\u003c"),
         }}
       />
-      <Portfolio />
+      <Portfolio
+        labFeatures={publishedLabArticles
+          .filter((article) => article.featured)
+          .map(toLabCard)}
+      />
     </>
   );
 }

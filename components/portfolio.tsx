@@ -1,6 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { LabCard } from "@/components/lab/lab-card";
+import type { LabCardData } from "@/content/lab/types";
 import { CommandDemo, commandDemos } from "@/components/command-demo";
 import { useTheme } from "next-themes";
 import {
@@ -39,7 +42,7 @@ const navigation = [
   ["About", "about"],
   ["Experience", "experience"],
   ["Selected Work", "work"],
-  ["The Lab", "lab"],
+  ["The Lab", "/lab"],
 ];
 const skillIcons = [Cloud, Code2, GitBranch, Radio, Server, Terminal];
 function Infrastructure() {
@@ -117,7 +120,7 @@ function Infrastructure() {
     </div>
   );
 }
-export function Portfolio() {
+export function Portfolio({ labFeatures }: { labFeatures: LabCardData[] }) {
   const { resolvedTheme, setTheme } = useTheme();
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileNavRef = useRef<HTMLElement>(null);
@@ -187,7 +190,7 @@ export function Portfolio() {
           </a>
           <nav className="desktop-nav" aria-label="Main navigation">
             {navigation.map(([label, id]) => (
-              <a key={id} href={`#${id}`}>
+              <a key={id} href={id.startsWith("/") ? id : `#${id}`}>
                 {label}
               </a>
             ))}
@@ -243,7 +246,11 @@ export function Portfolio() {
             aria-label="Mobile navigation"
           >
             {[...navigation, ["Contact", "contact"]].map(([label, id]) => (
-              <a key={id} href={`#${id}`} onClick={() => setMenuOpen(false)}>
+              <a
+                key={id}
+                href={id.startsWith("/") ? id : `#${id}`}
+                onClick={() => setMenuOpen(false)}
+              >
                 {label}
                 <ArrowUpRight size={16} />
               </a>
@@ -529,7 +536,7 @@ export function Portfolio() {
                     <span key={tool}>{tool}</span>
                   ))}
                 </div>
-                <details className="work-details" open={index === 0}>
+                <details className="work-details">
                   <summary>
                     Explore the work <span className="details-plus">+</span>
                   </summary>
@@ -576,14 +583,9 @@ export function Portfolio() {
               <span>Local LLMs</span>
               <span>Observability</span>
             </div>
-            <a
-              className="text-link"
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Find me on GitHub <ArrowUpRight size={16} />
-            </a>
+            <Link className="text-link" href="/lab">
+              Explore the Engineering Lab <ArrowUpRight size={16} />
+            </Link>
           </div>
           <div className="lab-terminal">
             <div className="terminal-title">
@@ -609,6 +611,25 @@ export function Portfolio() {
               <Server size={13} /> PERSONAL LAB / EXPLORATION, NOT PRODUCTION
             </div>
           </div>
+        </section>
+        <section
+          className="section-shell lab-home-featured"
+          aria-labelledby="lab-featured-title"
+        >
+          <p className="eyebrow">PERSONAL ENGINEERING LAB</p>
+          <h2 id="lab-featured-title">Built, investigated, documented.</h2>
+          <p>
+            Personal infrastructure stories, separate from professional Selected
+            Work. Historical activity, not a live service inventory.
+          </p>
+          <div className="lab-card-grid">
+            {labFeatures.map((article) => (
+              <LabCard article={article} key={article.slug} />
+            ))}
+          </div>
+          <Link className="button button-secondary" href="/lab">
+            Explore the Engineering Lab <ArrowUpRight size={17} />
+          </Link>
         </section>
         <section
           id="certifications"

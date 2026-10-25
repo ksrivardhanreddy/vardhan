@@ -16,7 +16,11 @@ test("local media, downloads and metadata images exist in the export", () => {
   )) {
     const url = decode(raw);
     if (url === "/") continue;
-    assert.ok(existsSync(path.join("out", url)), url);
+    assert.ok(
+      existsSync(path.join("out", url)) ||
+        existsSync(path.join("out", `${url}.html`)),
+      url,
+    );
   }
   assert.ok(statSync("out/images/vardhan-portrait.webp").size < 200000);
 });

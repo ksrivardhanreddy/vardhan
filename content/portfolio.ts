@@ -229,6 +229,6 @@ export const certifications = [
     name: "Red Hat Certified Engineer (v7)",
     issuer: "Red Hat",
     image: "/images/rhce.png",
-    url: null, // The legacy verification service returned HTTP 500 during audit.
+    url: "https://rhtapps.redhat.com/verify?certId=180-109-324",
   },
 ];
