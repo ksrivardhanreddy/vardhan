@@ -21,7 +21,7 @@ export default function Page() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(person).replace(/</g, "\\u003c"),
+          __html: JSON.stringify(person).replace(/</g, "\u003c"),
         }}
       />
       <Portfolio />

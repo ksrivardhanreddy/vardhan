@@ -3,10 +3,9 @@ import type { Metadata } from "next";
 import { Providers } from "./providers";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.vardhan.pro"),
-  title:
-    "Vardhan | Senior DevOps Engineer · AWS, Kubernetes & Platform Engineering",
+  title: "Srivardhan Reddy Kolan | Senior DevOps & Platform Engineer",
   description:
-    "Srivardhan Reddy Kolan — Senior DevOps Engineer in Hyderabad. AWS, Kubernetes, Terraform, CI/CD, observability, and production reliability.",
+    "Senior DevOps and Platform Engineer specializing in AWS, Kubernetes, Terraform, Linux, and cloud infrastructure. Explore projects, experience, and certifications.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "Vardhan · Reliable platforms. Safer releases.",
@@ -16,6 +15,20 @@ export const metadata: Metadata = {
     siteName: "Vardhan",
     type: "website",
     locale: "en_IN",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Srivardhan Reddy Kolan — Senior DevOps & Platform Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Srivardhan Reddy Kolan | Senior DevOps & Platform Engineer",
+    description: "AWS · Kubernetes · Terraform · Linux · Cloud Infrastructure",
+    images: ["/opengraph-image.png"],
   },
   robots: { index: true, follow: true },
 };

@@ -41,7 +41,7 @@ const navigation = [
   ["Selected Work", "work"],
   ["The Lab", "lab"],
 ];
-const skillIcons = [Cloud, Code2, GitBranch, Radio];
+const skillIcons = [Cloud, Code2, GitBranch, Radio, Server, Terminal];
 function Infrastructure() {
   return (
     <div
@@ -119,6 +119,8 @@ function Infrastructure() {
 }
 export function Portfolio() {
   const { resolvedTheme, setTheme } = useTheme();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
   const pageEndRef = useRef<HTMLElement>(null);
   const [atBottom, setAtBottom] = useState(false);
   useEffect(() => {
@@ -150,6 +152,18 @@ export function Portfolio() {
     const id = setTimeout(() => setCopied(false), 2500);
     return () => clearTimeout(id);
   }, [copied]);
+  useEffect(() => {
+    if (!menuOpen) return;
+    mobileNavRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    function onEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    }
+    document.addEventListener("keydown", onEscape);
+    return () => document.removeEventListener("keydown", onEscape);
+  }, [menuOpen]);
   async function copyEmail() {
     try {
       await navigator.clipboard.writeText(profile.email);
@@ -210,6 +224,7 @@ export function Portfolio() {
               Let’s Talk <ArrowUpRight size={15} />
             </a>
             <button
+              ref={menuButtonRef}
               className="icon-button menu-button"
               aria-label={menuOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={menuOpen}
@@ -222,6 +237,7 @@ export function Portfolio() {
         </div>
         {menuOpen && (
           <nav
+            ref={mobileNavRef}
             id="mobile-nav"
             className="mobile-nav"
             aria-label="Mobile navigation"
@@ -246,7 +262,7 @@ export function Portfolio() {
               <div className="portrait-ring">
                 <div className="portrait-crop">
                   <Image
-                    src="/images/vardhan-portrait.png"
+                    src="/images/vardhan-portrait.webp"
                     alt="Srivardhan Reddy Kolan"
                     width={184}
                     height={184}
@@ -267,28 +283,46 @@ export function Portfolio() {
               </div>
             </div>
             <h1>
-              Reliable platforms.
+              Senior DevOps &amp;
               <br />
-              <span>Safer releases.</span>
-              <br />
-              Less firefighting.
+              <span>Platform Engineer.</span>
             </h1>
+            <p className="hero-specialties">
+              AWS · Kubernetes · Terraform · Linux · Cloud Infrastructure
+            </p>
             <p className="hero-description">
-              I build and operate the infrastructure behind software. AWS,
-              Kubernetes, and automation—with production reliability at the
-              center.
+              Building reliable cloud platforms, automating infrastructure, and
+              solving production engineering challenges.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href="#work">
-                Explore My Work <ArrowUpRight size={17} />
+                View Projects <ArrowUpRight size={17} />
               </a>
               <a
                 className="button button-secondary"
                 href={profile.resume}
-                target="_blank"
-                rel="noreferrer"
+                download
               >
-                View Résumé <ArrowDown size={16} />
+                Download Résumé <ArrowDown size={16} />
+              </a>
+            </div>
+            <div className="hero-secondary-links">
+              <a className="text-link" href="#contact">
+                Get in Touch <ArrowUpRight size={16} />
+              </a>
+              <a
+                href={profile.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                GitHub
+              </a>
+              <a
+                href={profile.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
               </a>
             </div>
             <div className="hero-footnote">
@@ -311,18 +345,18 @@ export function Portfolio() {
             <div className="strip-label">BUILT ON EXPERIENCE</div>
             <div>
               <strong>
-                10+ <span>years in IT</span>
+                Linux <span>& production operations</span>
               </strong>
             </div>
             <div>
               <strong>
-                8+ <span>years in cloud & DevOps</span>
+                Cloud <span>& platform engineering</span>
               </strong>
             </div>
             <div className="strip-cert">
               <ShieldCheck size={19} />
               <strong>
-                AWS <span>·</span> CKA <span>·</span> RHCE
+                AWS <span>·</span> CKA
               </strong>
             </div>
           </div>
@@ -354,7 +388,7 @@ export function Portfolio() {
               className="text-link"
               href={profile.linkedin}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               More about my journey <ArrowUpRight size={16} />
             </a>
@@ -452,7 +486,7 @@ export function Portfolio() {
           </div>
           <div className="work-grid">
             {work.map((item, index) => (
-              <article className="work-card" key={item.number}>
+              <article className="work-card" id={item.id} key={item.number}>
                 <div className="work-card-top">
                   <span>{item.category}</span>
                   <span>/{item.number}</span>
@@ -485,6 +519,9 @@ export function Portfolio() {
                   {...commandDemos[index]}
                   paused={animationsPaused}
                 />
+                <p className="project-status">
+                  {item.status} · {item.contextLabel}
+                </p>
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
                 <div className="tags">
@@ -492,7 +529,7 @@ export function Portfolio() {
                     <span key={tool}>{tool}</span>
                   ))}
                 </div>
-                <details className="work-details">
+                <details className="work-details" open={index === 0}>
                   <summary>
                     Explore the work <span className="details-plus">+</span>
                   </summary>
@@ -501,6 +538,14 @@ export function Portfolio() {
                     <p>{item.context}</p>
                     <h4>My contribution</h4>
                     <p>{item.contribution}</p>
+                    <h4>Engineering obstacle</h4>
+                    <p>{item.obstacle}</p>
+                    <h4>Result and evidence boundary</h4>
+                    <p>{item.result}</p>
+                    <h4>Constraints</h4>
+                    <p>{item.constraints}</p>
+                    <h4>Future improvements</h4>
+                    <p>{item.nextSteps}</p>
                     <h4>The takeaway</h4>
                     <p>{item.takeaway}</p>
                   </div>
@@ -535,7 +580,7 @@ export function Portfolio() {
               className="text-link"
               href={profile.github}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Find me on GitHub <ArrowUpRight size={16} />
             </a>
@@ -576,26 +621,34 @@ export function Portfolio() {
             </h2>
           </div>
           <div className="cert-grid">
-            {certifications.map((cert) => (
-              <a
-                className="cert-card"
-                href={cert.url}
-                key={cert.short}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Image src={cert.image} alt="" width="68" height="68" />
-                <div>
-                  <span className="cert-short">{cert.short}</span>
-                  <h3>{cert.name}</h3>
-                  <p>{cert.issuer}</p>
-                  <span className="verify">
-                    Verify credential <ExternalLink size={12} />
-                  </span>
-                </div>
-                <ArrowUpRight className="cert-arrow" size={17} />
-              </a>
-            ))}
+            {certifications.map((cert) => {
+              const Card = cert.url ? "a" : "article";
+              return (
+                <Card
+                  className="cert-card"
+                  href={cert.url ?? undefined}
+                  key={cert.short}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image src={cert.image} alt="" width="68" height="68" />
+                  <div>
+                    <span className="cert-short">{cert.short}</span>
+                    <h3>{cert.name}</h3>
+                    <p>{cert.issuer}</p>
+                    <p className="credential-status">{cert.status}</p>
+                    {cert.url && (
+                      <span className="verify">
+                        Verify credential <ExternalLink size={12} />
+                      </span>
+                    )}
+                  </div>
+                  {cert.url && (
+                    <ArrowUpRight className="cert-arrow" size={17} />
+                  )}
+                </Card>
+              );
+            })}
           </div>
           <div className="education">
             <span>EDUCATION</span>
@@ -616,7 +669,7 @@ export function Portfolio() {
                   <em>that holds up.</em>
                 </h2>
                 <p>
-                  Cloud platforms, Delivery workflows, or a Good infrastructure
+                  Cloud platforms, delivery workflows, or a good infrastructure
                   problem.
                   <br />
                   I’m happy to compare notes.
@@ -634,17 +687,30 @@ export function Portfolio() {
                 </span>
               </div>
               <div className="contact-links">
-                <a href={profile.linkedin} target="_blank" rel="noreferrer">
+                <a
+                  href={profile.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Linkedin size={19} /> LinkedIn <ArrowUpRight size={16} />
                 </a>
-                <a href={profile.github} target="_blank" rel="noreferrer">
+                <a
+                  href={profile.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Github size={19} /> GitHub <ArrowUpRight size={16} />
                 </a>
-                <a href={profile.blog} target="_blank" rel="noreferrer">
+                <a
+                  href={profile.blog}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Code2 size={19} /> Technical Notes <ArrowUpRight size={16} />
                 </a>
-                <a href={profile.resume} target="_blank" rel="noreferrer">
-                  <ArrowDown size={19} /> Résumé <ArrowUpRight size={16} />
+                <a href={profile.resume} download>
+                  <ArrowDown size={19} /> Download Résumé{" "}
+                  <ArrowUpRight size={16} />
                 </a>
               </div>
             </div>
@@ -658,7 +724,9 @@ export function Portfolio() {
         <p>
           © {new Date().getFullYear()} {profile.name}
         </p>
-        <span>Built with care. Hosted on Cloudflare.</span>
+        <span>
+          Hosted on Cloudflare. Privacy-friendly Cloudflare Web Analytics.
+        </span>
         <a href="#home">Back to Top ↑</a>
       </footer>
       <button

@@ -4,7 +4,7 @@ export const profile = {
   github: "https://github.com/ksrivardhanreddy",
   linkedin: "https://www.linkedin.com/in/srivardhanreddykolan",
   blog: "https://hashnode.vardhan.pro",
-  resume: "/SrivardhanReddy-Resume.pdf",
+  resume: "/resume.pdf",
 };
 export const expertise = [
   {
@@ -33,6 +33,20 @@ export const expertise = [
     title: "Observability & Operations",
     description: "Understand the system. Find the cause.",
     tools: ["Prometheus", "Grafana", "CloudWatch", "Linux", "RCA", "ITIL"],
+  },
+  {
+    title: "Linux & Networking",
+    description: "Operational foundations for troubleshooting systems.",
+    tools: ["RHEL", "Ubuntu", "DNS", "TCP/IP", "Load balancing", "Shell"],
+  },
+  {
+    title: "Exploring AI Infrastructure",
+    description: "Personal learning, separate from production experience.",
+    tools: [
+      "Local LLM experiments",
+      "Proxmox homelab",
+      "Model serving concepts",
+    ],
   },
 ];
 export const experience = [
@@ -116,7 +130,10 @@ export const work = [
   {
     number: "01",
     category: "DEPLOYMENT GOVERNANCE",
-    title: "A deliberate gate before production.",
+    id: "deployment-approval-controls",
+    status: "Completed",
+    contextLabel: "Professional · public-safe",
+    title: "GitLab approval controls for Terraform delivery",
     description:
       "GitLab approval controls that protect infrastructure changes before a downstream pipeline starts.",
     tools: ["GitLab CI", "Terraform", "Protected Environments"],
@@ -124,6 +141,14 @@ export const work = [
       "Production infrastructure changes need an explicit approval boundary, including when a parent pipeline triggers downstream Terraform jobs.",
     contribution:
       "Designed and validated Protected Environment controls and parent trigger-job behavior using environment action:start before downstream execution.",
+    obstacle:
+      "A parent trigger job introduces a second pipeline boundary. Approval had to be checked before downstream infrastructure execution, rather than assuming a downstream job would enforce it.",
+    result:
+      "Validated approval controls and trigger-job behavior. This summary describes the control design; it does not claim measured incident reduction or deployment-speed gains.",
+    constraints:
+      "Employer configuration and logs are private. The diagram is a sanitized conceptual flow, not an employer infrastructure map.",
+    nextSteps:
+      "Future improvement: maintain regression scenarios for approved, rejected, and unapproved parent-to-child runs as pipeline configuration evolves.",
     takeaway:
       "Approval behavior needs to be validated across pipeline boundaries, alongside the infrastructure plan itself.",
     diagram: ["Parent pipeline", "Approval gate", "Terraform"],
@@ -131,7 +156,10 @@ export const work = [
   {
     number: "02",
     category: "PRODUCTION RELIABILITY",
-    title: "Follow the signal. Find the cause.",
+    id: "eks-incident-investigation",
+    status: "Completed",
+    contextLabel: "Professional · public-safe",
+    title: "Investigating EKS workload and node failures",
     description:
       "Incident analysis across applications, Kubernetes, and the underlying EC2 infrastructure.",
     tools: ["EKS", "Redis", "CloudWatch", "Prometheus"],
@@ -139,6 +167,14 @@ export const work = [
       "Kubernetes symptoms can originate in workload sizing, application health, or the nodes hosting the cluster.",
     contribution:
       "Investigated Redis degradation, memory-driven pod evictions, HPA/request mismatches, and NodeNotReady events caused by EC2 hardware issues. Documented findings for follow-up.",
+    obstacle:
+      "Similar Kubernetes symptoms required investigation at different layers: application health, workload resource requests, and underlying EC2 node health.",
+    result:
+      "Documented investigation findings and root causes for operational follow-up. No response-time or availability metrics are claimed.",
+    constraints:
+      "This summarizes separate investigations; it is not a single incident or a published employer architecture.",
+    nextSteps:
+      "Future improvement: use sanitized investigation checklists to make recurring diagnostic steps easier to repeat.",
     takeaway:
       "Useful incident response connects workload signals to infrastructure evidence and leaves a clear RCA for the next engineer.",
     diagram: ["Signals", "Cluster analysis", "Root cause"],
@@ -146,7 +182,10 @@ export const work = [
   {
     number: "03",
     category: "PLATFORM VISIBILITY",
-    title: "Make infrastructure costs visible.",
+    id: "kubernetes-cost-evaluation",
+    status: "Completed evaluation",
+    contextLabel: "Professional · public-safe",
+    title: "Evaluating Kubernetes cost visibility",
     description:
       "Evaluating Kubernetes cost visibility to support better showback and chargeback conversations.",
     tools: ["OpenCost", "VictoriaMetrics", "Kubernetes"],
@@ -154,6 +193,14 @@ export const work = [
       "Cluster-level cost visibility helps teams understand resource ownership and discuss infrastructure spend.",
     contribution:
       "Evaluated OpenCost with VictoriaMetrics and compared cluster-level insights against existing SaaS cost tooling.",
+    obstacle:
+      "The evaluation compared cluster-level cost signals with existing SaaS tooling; visibility alone does not establish realized cost savings.",
+    result:
+      "Evaluated OpenCost with VictoriaMetrics for cost visibility. This was an evaluation, not a claim of completed chargeback rollout or savings.",
+    constraints:
+      "Internal cost data, configuration, and comparisons are not public.",
+    nextSteps:
+      "Future improvement: define acceptance criteria for data coverage and allocation accuracy before any rollout decision.",
     takeaway:
       "The focus was evaluating cost visibility patterns and the information available to teams.",
     diagram: ["Metrics", "Cost allocation", "Visibility"],
@@ -162,6 +209,7 @@ export const work = [
 export const certifications = [
   {
     short: "CKA",
+    status: "Active",
     name: "Certified Kubernetes Administrator",
     issuer: "Cloud Native Computing Foundation",
     image: "/images/CKA.png",
@@ -169,16 +217,18 @@ export const certifications = [
   },
   {
     short: "AWS",
-    name: "Solutions Architect · Associate",
+    status: "Active",
+    name: "AWS Certified Solutions Architect – Associate",
     issuer: "Amazon Web Services",
     image: "/images/AWS-SAA.png",
     url: "https://www.credly.com/badges/dfb30d20-556c-4737-b9f7-f876e98e3989",
   },
   {
     short: "RHCE",
-    name: "Red Hat Certified Engineer",
+    status: "Previously earned · expired",
+    name: "Red Hat Certified Engineer (v7)",
     issuer: "Red Hat",
     image: "/images/rhce.png",
-    url: "https://rhtapps.redhat.com/verify?certId=180-109-324",
+    url: null, // The legacy verification service returned HTTP 500 during audit.
   },
 ];

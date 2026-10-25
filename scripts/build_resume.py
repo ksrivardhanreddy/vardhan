@@ -44,7 +44,7 @@ p('Senior DevOps Engineer | AWS | Kubernetes | Platform Engineering','role')
 p('Hyderabad, Telangana | +91 9700009938 | <link href="mailto:sri@srivardhanreddy.com">sri@srivardhanreddy.com</link><br/><link href="https://www.vardhan.pro">www.vardhan.pro</link> | <link href="https://www.linkedin.com/in/srivardhanreddykolan">linkedin.com/in/srivardhanreddykolan</link>','contact')
 story.append(HRFlowable(width='100%',thickness=1,color=COPPER,spaceAfter=2))
 section('Professional Summary')
-p('Senior DevOps Engineer with 10+ years in IT and 8+ years across cloud infrastructure, Kubernetes, CI/CD automation, Linux administration, and production operations. Hands-on experience with AWS/EKS, Terraform/Terragrunt, protected deployment workflows, observability, incident response, and root cause analysis. Focused on dependable platforms, repeatable infrastructure, and safer releases.')
+p('Senior DevOps Engineer with experience across cloud infrastructure, Kubernetes, CI/CD automation, Linux administration, and production operations. Hands-on experience with AWS/EKS, Terraform/Terragrunt, protected deployment workflows, observability, incident response, and root cause analysis. Focused on dependable platforms, repeatable infrastructure, and safer releases.')
 section('Technical Skills')
 for name,items in [
  ('Cloud','AWS: EC2, EKS, S3, RDS, ALB/ELB, Route 53, IAM, CloudWatch, Auto Scaling, Lambda, SES'),
@@ -88,7 +88,7 @@ p('Tech Mahindra Ltd. | Pune, India','job')
 p('Linux L2 Production Support Engineer | 2013 - 2015','period')
 bullet('Provided L2 application support in an ITIL environment, handling incidents, changes, Linux deployments, basic shell scripting, and operational documentation.')
 section('Certifications')
-p('AWS Certified Solutions Architect - Associate<br/>Certified Kubernetes Administrator (CKA)<br/>Red Hat Certified Engineer (RHCE)','body')
+p('AWS Certified Solutions Architect - Associate (active)<br/>Certified Kubernetes Administrator (CKA) (active)<br/>Red Hat Certified Engineer (RHCE v7) - previously earned, expired','body')
 section('Education')
 p("Bachelor's in Computer Science and Mathematics | Osmania University, Hyderabad")
 section('Personal Projects &amp; Continuous Learning')
@@ -99,6 +99,6 @@ doc.build(story,onFirstPage=footer,onLaterPages=footer)
 from pypdf import PdfReader
 r=PdfReader(OUTPUT)
 assert len(r.pages)==2, f'Resume must be 2 pages, got {len(r.pages)}'
-for destination in ['public/SrivardhanReddy-Resume.pdf','public/resume.pdf']:
+for destination in ['public/resume.pdf']:
  copyfile(OUTPUT,ROOT/destination)
 print(f'Created {OUTPUT}: {len(r.pages)} pages')
