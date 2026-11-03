@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { MessageCircle } from "lucide-react";
+import { chatEnabled } from "@/lib/portfolio-ai/config";
 const Panel = lazy(() => import("./AiChatPanel"));
 class PanelBoundary extends Component<
   { open: boolean; onClose: () => void; children: ReactNode },
@@ -44,7 +45,7 @@ export function AiAssistant() {
     setOpen(false);
     if (restoreFocus) requestAnimationFrame(() => launcher.current?.focus());
   }
-  if (process.env.NEXT_PUBLIC_AI_WIDGET_ENABLED === "false") return null;
+  if (!chatEnabled(process.env.NEXT_PUBLIC_AI_WIDGET_ENABLED)) return null;
   return (
     <>
       {!open && (

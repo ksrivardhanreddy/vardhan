@@ -101,6 +101,18 @@ test("valid protected request independently retrieves canonical facts and invoke
   assert.equal(response.headers.get("Cache-Control"), "no-store");
   assert.ok(!JSON.stringify(f.events).includes(question));
 });
+test("single chat environment switch disables endpoint before external calls", async () => {
+  const f = fixture();
+  const response = await f.handler(f.req(), {
+    ...f.env,
+    NEXT_PUBLIC_AI_WIDGET_ENABLED: "false",
+  });
+  assert.equal(response.status, 503);
+  assert.deepEqual(
+    { ai: f.calls.ai, verify: f.calls.verify, guard: f.calls.guard },
+    { ai: 0, verify: 0, guard: 0 },
+  );
+});
 for (const [name, body, headers] of [
   ["oversized", { question: "x".repeat(5000), turnstileToken: "token" }, {}],
   ["empty", { question: "", turnstileToken: "token" }, {}],

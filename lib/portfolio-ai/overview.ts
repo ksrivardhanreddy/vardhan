@@ -19,7 +19,7 @@ export function overviewIntent(question: string): OverviewIntent | undefined {
     .trim();
   if (/^(hi|hello|hey)( there)?$/.test(normalized)) return "greeting";
   const generic = new Set(
-    "a an the i you your yourself he his him me my vardhan srivardhan reddy kolan s what which how can could would do does have has is are tell explain describe show list summarize summary overview about please all of and work worked done built on in for projects project skills skill experience experiences background career portfolio professional technical yourself it industry sector field roles role responsibilities journey employment history previous current past jobs job give provide an overview brief briefly detailed detail details walk through so far".split(
+    "a an the i you your yourself he his him me my vardhan srivardhan reddy kolan s who what which how can could would do does have has is are tell explain describe show list summarize summary overview about please all of and work worked done built on in for projects project skills skill experience experiences background career portfolio professional technical yourself it industry sector field roles role responsibilities journey employment history previous current past jobs job give provide an overview brief briefly detailed detail details walk through so far".split(
       " ",
     ),
   );
@@ -34,7 +34,7 @@ export function overviewIntent(question: string): OverviewIntent | undefined {
   )
     return "experience";
   if (
-    /\babout\b|\byourself\b|\bportfolio\b/.test(normalized) ||
+    /\babout\b|\byourself\b|\bportfolio\b|^who\b/.test(normalized) ||
     /^(what (do you|does he) do)$/.test(normalized)
   )
     return "about";

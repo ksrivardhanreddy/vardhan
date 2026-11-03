@@ -1,4 +1,5 @@
 import { queryTokens, search } from "./search";
+import { firstPerson } from "./voice";
 import type { Answer, KnowledgeIndex, SearchResult, SourceLink } from "./types";
 export const NO_EVIDENCE =
   "I don't have verified information about that in the public portfolio. I can explain Vardhan’s published projects, skills and experience; you can browse the Engineering Lab or contact him directly.";
@@ -18,6 +19,13 @@ export function sourcesFor(results: SearchResult[]): SourceLink[] {
     }));
 }
 export function composeAnswer(index: KnowledgeIndex, question: string): Answer {
+  const result = composePublishedAnswer(index, question);
+  return { ...result, answer: firstPerson(result.answer) };
+}
+function composePublishedAnswer(
+  index: KnowledgeIndex,
+  question: string,
+): Answer {
   const retrieval = search(index, question);
   if (!retrieval.intent && retrieval.results[0]?.chunk.questions)
     return {

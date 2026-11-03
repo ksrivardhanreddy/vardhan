@@ -58,7 +58,7 @@ The internal service guard consumes additional Workers requests. The key is a tr
 
 Cloudflare pricing currently provides10,000 shared account neurons/day, resets00:00UTC (05:30IST), and stops Free-plan inference on exhaustion. Functions share the Workers Free100,000requests/day pool; static paths bypass Functions and remain static. Index/BM25/local answers have no inference cost. Verify current terms and actual account usage at release.
 
-The suggested fp8-fast model appears in public pricing but was absent from the exact catalog query. The regular fp8 8B model was returned by the account catalog and is the configured default. Its successful inference remains unverified. No Qwen switch or real-AI A/B benchmark occurred. The sample neuron estimator applies only to fp8-fast's documented 4,119 input / 34,868 output neurons per million tokens: 1,375 input + 200 output ≈ 12.64 neurons. This is an illustration, not measured usage or promised daily capacity, and must not be applied to the regular fp8 model. Real dashboard usage is authoritative.
+The suggested fp8-fast model appears in public pricing but was absent from the exact catalog query. The regular fp8 8B model was returned by the account catalog and is the configured default. One direct public-context inference succeeded; the complete browser challenge flow remains a separate check. No Qwen switch or real-AI A/B benchmark occurred. The sample neuron estimator applies only to fp8-fast's documented 4,119 input / 34,868 output neurons per million tokens: 1,375 input + 200 output ≈ 12.64 neurons. This is an illustration, not measured usage or promised daily capacity, and must not be applied to the regular fp8 model. Real dashboard usage is authoritative.
 
 ## Telemetry and privacy
 
@@ -73,6 +73,8 @@ No raw questions, responses, exact IP addresses, user identities or user-agent f
 
 ## Kill switch and rollback
 
+The single master switch is `AI_CHAT_ENABLED` in `lib/portfolio-ai/config.ts`. Set it to `false`, commit and rebuild/deploy to remove the launcher and disable `/api/chat` before external calls. Set it back to `true` and rebuild to restore the chat. The rest of the static website is unaffected. Alternatively, set the existing Pages production variable `NEXT_PUBLIC_AI_WIDGET_ENABLED=false` and rebuild; the same setting now gates both UI and API. Static browser bundles require a rebuild and visitors must reload to receive the new setting.
+
 Set server AI_ASSISTANT_ENABLED=false (and/or AI_MODE=off) and redeploy the affected environment; the static widget continues knowledge-only. Turn off NEXT_PUBLIC_AI_ASSISTANT_ENABLED on rebuild to hide the optional remote control. To remove the widget entirely use NEXT_PUBLIC_AI_WIDGET_ENABLED=false and rebuild. Restore a verified previous Pages deployment if needed; do not change DNS or disable all account Workers. Previous deployed portfolio ID is recorded only in private local AGENTS, not in public operating docs.
 
 ## References checked during implementation
@@ -85,5 +87,7 @@ Set server AI_ASSISTANT_ENABLED=false (and/or AI_MODE=off) and redeploy the affe
 - [Free-zone WAF availability](https://developers.cloudflare.com/waf/)
 
 ## Verification limitations
+
+The configured production default `@cf/meta/llama-3.1-8b-instruct-fp8` was verified with one direct Workers AI request using only public portfolio context. It returned HTTP 200 with a grounded first-person answer (413 input tokens, 93 output tokens, approximately 8.12 neurons). This confirms the account/model can infer; it does not by itself verify the complete visitor Turnstile-to-Pages flow. Screenshot examples about DevOps tenure and phone contact are answered from approved deterministic knowledge, with no model invocation. Phone numbers are not included in this assistant; contact answers offer the published email and LinkedIn.
 
 The Workers Free subscription was confirmed in the dashboard. Tests cover handler, guard, retrieval, export, and local mock behavior. A production AI response and actual quota consumption remain unverified until a successful live challenged request. Cloudflare rate-limit counters are location-local and approximate.

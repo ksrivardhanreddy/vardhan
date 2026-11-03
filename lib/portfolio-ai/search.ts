@@ -208,51 +208,56 @@ function matchCareerFaq(
   if (exact.length === 1)
     return { chunk: exact[0], score: 2, matchedTokens: [], coverage: 1 };
   // Answer bounded missing-fact topics without letting BM25 infer a positive claim.
-  const boundaryId = /salary|compensation/i.test(question)
-    ? "salary-boundary"
-    : /(?:how many|years|tenure).{0,45}(?:kubernetes|k8s|terraform|aws|eks)/i.test(
-          question,
-        )
-      ? "technology-tenure"
-      : /(?:70b|gpu|llm|inference).{0,35}(?:production|operat|serving)|production.{0,35}(?:llm|inference|gpu)/i.test(
-            question,
-          )
-        ? "learning-status"
-        : /career break|employment gap|career gap/i.test(question)
-          ? "career-gaps"
-          : /sponsor|work authori[sz]ation|visa/i.test(question)
-            ? "sponsorship"
-            : /notice|(?:earliest|soon|when (?:can|could|would)).{0,30}(?:start|join)|start date|immediate join/i.test(
-                  question,
-                )
-              ? "notice-period"
-              : /(?:relocat|move).{0,35}(?:abroad|overseas|countr|international)|(?:abroad|overseas|international).{0,25}(?:relocat|opportunit)/i.test(
-                    question,
-                  )
-                ? "relocation"
-                : /(?:prefer|location|city).{0,30}(?:india|hyderabad)|(?:india|hyderabad).{0,30}(?:prefer|location|city)/i.test(
+  const boundaryId =
+    /\b(?:phone|mobile|telephone|whatsapp)\b|\bcall(?:ing)?\s+(?:him|you|vardhan)\b/i.test(
+      question,
+    )
+      ? "phone-contact"
+      : /salary|compensation/i.test(question)
+        ? "salary-boundary"
+        : /(?:how many|years|tenure).{0,45}(?:kubernetes|k8s|terraform|aws|eks)/i.test(
+              question,
+            )
+          ? "technology-tenure"
+          : /(?:70b|gpu|llm|inference).{0,35}(?:production|operat|serving)|production.{0,35}(?:llm|inference|gpu)/i.test(
+                question,
+              )
+            ? "learning-status"
+            : /career break|employment gap|career gap/i.test(question)
+              ? "career-gaps"
+              : /sponsor|work authori[sz]ation|visa/i.test(question)
+                ? "sponsorship"
+                : /notice|(?:earliest|soon|when (?:can|could|would)).{0,30}(?:start|join)|start date|immediate join/i.test(
                       question,
                     )
-                  ? "india-location"
-                  : /(?:open|accept|prefer|arrangement).{0,30}(?:remote|hybrid|on.site)|(?:remote|hybrid|on.site).{0,30}(?:work|arrangement)/i.test(
+                  ? "notice-period"
+                  : /(?:relocat|move).{0,35}(?:abroad|overseas|countr|international)|(?:abroad|overseas|international).{0,25}(?:relocat|opportunit)/i.test(
                         question,
                       )
-                    ? "work-arrangement"
-                    : /(?:looking|exploring|open|available).{0,30}(?:job|opportunit|interview)|(?:recruiter).{0,25}(?:approach|contact)/i.test(
+                    ? "relocation"
+                    : /(?:prefer|location|city).{0,30}(?:india|hyderabad)|(?:india|hyderabad).{0,30}(?:prefer|location|city)/i.test(
                           question,
                         )
-                      ? "availability"
-                      : /direct reports|team size|manag.{0,15}team|mentor|leadership/i.test(
+                      ? "india-location"
+                      : /(?:open|accept|prefer|arrangement).{0,30}(?:remote|hybrid|on.site)|(?:remote|hybrid|on.site).{0,30}(?:work|arrangement)/i.test(
                             question,
                           )
-                        ? "leadership"
-                        : /(?:experience|\bexp\b).{0,25}(?:total|overall)|(?:total|overall|years|much|long).{0,30}(?:experience|\bexp\b)|(?:years|long).{0,25}devops/i.test(
+                        ? "work-arrangement"
+                        : /(?:looking|exploring|open|available).{0,30}(?:job|opportunit|interview)|(?:recruiter).{0,25}(?:approach|contact)/i.test(
                               question,
                             )
-                          ? /devops/i.test(question)
-                            ? "devops-years"
-                            : "experience-total"
-                          : undefined;
+                          ? "availability"
+                          : /direct reports|team size|manag.{0,15}team|mentor|leadership/i.test(
+                                question,
+                              )
+                            ? "leadership"
+                            : /(?:experience|\bexp\b).{0,25}(?:total|overall)|(?:total|overall|years|much|long).{0,30}(?:experience|\bexp\b)|(?:years|long).{0,25}devops|^\s*(?:(?:what(?:[’']?s| is)|tell me about)\s+)?(?:(?:his|your|my|the)\s+)?devops\s+(?:experience|exp)(?:\s+(?:till now|until now|so far|to date))?\s*[?.!]*\s*$/i.test(
+                                  question,
+                                )
+                              ? /devops/i.test(question)
+                                ? "devops-years"
+                                : "experience-total"
+                              : undefined;
   if (boundaryId) {
     const chunk = index.chunks.find(
       (c) => c.documentId === `faq-${boundaryId}`,

@@ -3,6 +3,8 @@ import { composeAnswer, sourcesFor } from "./extractive-answer";
 import { validateIndex, validQuestion } from "./privacy";
 import { ALLOWED_MODELS, buildPrompt, supportedOutput } from "./prompt";
 import { observeUsage, type UsageEvent } from "./usage";
+import { chatEnabled } from "./config";
+import { firstPerson } from "./voice";
 export type FetchBinding = { fetch(request: Request): Promise<Response> };
 export type ChatEnv = {
   AI?: {
@@ -26,6 +28,7 @@ export type ChatEnv = {
   AI_MAX_OUTPUT_TOKENS?: string;
   AI_ALLOWED_ORIGINS?: string;
   AI_TELEMETRY?: string;
+  NEXT_PUBLIC_AI_WIDGET_ENABLED?: string;
 };
 const errorMessages: Record<string, string> = {
   INVALID_REQUEST: "Please send a short portfolio question.",
@@ -78,6 +81,8 @@ export function createChatHandler(
       record(code);
       return json({ error: { code, message: errorMessages[code] } }, status);
     };
+    if (!chatEnabled(env.NEXT_PUBLIC_AI_WIDGET_ENABLED))
+      return fail("AI_UNAVAILABLE", 503);
     if (request.method !== "POST") {
       const r = fail("INVALID_REQUEST", 405);
       r.headers.set("Allow", "POST");
@@ -250,7 +255,7 @@ export function createChatHandler(
         record("AI_SUCCESS");
         return json({
           mode: "ai",
-          answer,
+          answer: firstPerson(answer),
           sources: sourcesFor(prompt.used),
           model,
           requestId: crypto.randomUUID(),

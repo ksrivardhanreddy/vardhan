@@ -95,6 +95,7 @@ for (const question of [
   "What are his current and previous roles?",
   "tell me about yourself",
   "what do you do?",
+  "Who is Vardhan?",
 ])
   test(`short overview works without inference: ${question}`, () => {
     const result = search(index, question);

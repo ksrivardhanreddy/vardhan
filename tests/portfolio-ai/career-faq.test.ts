@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { careerFaq } from "../../content/ai/career-faq";
 import { composeAnswer } from "../../lib/portfolio-ai/extractive-answer";
 import { validateIndex } from "../../lib/portfolio-ai/privacy";
+import { firstPerson } from "../../lib/portfolio-ai/voice";
 import type { KnowledgeIndex } from "../../lib/portfolio-ai/types";
 const index = JSON.parse(
   readFileSync("public/knowledge-base/index.json", "utf8"),
@@ -29,7 +30,13 @@ const heldOut: [string, RegExp][] = [
   ["Do you need visa sponsorship please?", /sponsorship.*outside India/i],
   ["What is your education please?", /Osmania/],
   ["Have you managed a team please?", /not published/],
-  ["Explain employment gap please", /contact Vardhan directly/i],
+  ["Explain employment gap please", /contact me directly/i],
+  ["devops experience till now?", /8\+ years in DevOps/],
+  ["DevOps experience so far?", /8\+ years in DevOps/],
+  [
+    "whats his phone number to contact him?",
+    /email me at sri@srivardhanreddy.com/,
+  ],
   ["Why are you looking for a change please?", /better career opportunities/i],
 ];
 for (const [question, expected] of heldOut)
@@ -76,6 +83,20 @@ test("all catalog question variants route to their approved answers", () => {
   for (const faq of careerFaq)
     for (const question of faq.questions) {
       const answer = composeAnswer(index, question);
-      assert.equal(answer.answer, faq.answer, question);
+      assert.equal(answer.answer, firstPerson(faq.answer), question);
     }
+});
+test("portfolio voice uses first person without changing approved facts", () => {
+  assert.equal(
+    firstPerson(
+      "Vardhan has AWS experience. His focus is Linux. He works in Hyderabad.",
+    ),
+    "I have AWS experience. My focus is Linux. I work in Hyderabad.",
+  );
+  const result = composeAnswer(
+    index,
+    "tell me about his experience and work in IT",
+  );
+  assert.match(result.answer, /10\+ years/);
+  assert.doesNotMatch(result.answer, /\b(?:Vardhan|His|He|his|him)\b/);
 });
