@@ -13,12 +13,13 @@ export function overviewIntent(question: string): OverviewIntent | undefined {
     .toLowerCase()
     .replace(/\bwhat[’']?s\b/g, "what is")
     .replace(/\b(?:he[’']s)\b/g, "he is")
+    .replace(/\binformation technology\b/g, "it")
     .replace(/[^a-z\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
   if (/^(hi|hello|hey)( there)?$/.test(normalized)) return "greeting";
   const generic = new Set(
-    "a an the i you your yourself he his him me my vardhan srivardhan reddy kolan s what which how can could would do does have has is are tell explain describe show list summarize summary overview about please all of and work worked done built on in for projects project skills skill experience experiences background career portfolio professional technical yourself".split(
+    "a an the i you your yourself he his him me my vardhan srivardhan reddy kolan s what which how can could would do does have has is are tell explain describe show list summarize summary overview about please all of and work worked done built on in for projects project skills skill experience experiences background career portfolio professional technical yourself it industry sector field roles role responsibilities journey employment history previous current past jobs job give provide an overview brief briefly detailed detail details walk through so far".split(
       " ",
     ),
   );
@@ -26,7 +27,11 @@ export function overviewIntent(question: string): OverviewIntent | undefined {
     return;
   if (/\bprojects?\b/.test(normalized)) return "projects";
   if (/\bskills?\b/.test(normalized)) return "skills";
-  if (/\bexperience(?:s)?\b|\bcareer\b|\bbackground\b/.test(normalized))
+  if (
+    /\bexperience(?:s)?\b|\bcareer\b|\bbackground\b|\bemployment\b|\broles?\b|\bjobs?\b/.test(
+      normalized,
+    )
+  )
     return "experience";
   if (
     /\babout\b|\byourself\b|\bportfolio\b/.test(normalized) ||
@@ -50,6 +55,7 @@ export function overviewRetrieval(
       "skills::delivery-gitops",
     ],
     experience: [
+      "faq-experience-total::answer",
       "experience::nemetschek-group-bluebeam-technical-analyst-devops",
       "experience::mks-vision-pvt-ltd-senior-devops-engineer",
       "experience::avya-it-pvt-ltd-devops-engineer",

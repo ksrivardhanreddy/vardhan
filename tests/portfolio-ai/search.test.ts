@@ -87,6 +87,12 @@ for (const question of [
   "whats your experience",
   "whats his skills?",
   "whats his projects?",
+  "tell me about his experience and work in IT",
+  "Tell me about his experience in the IT industry",
+  "Describe his professional experience in information technology",
+  "Give me a brief overview of his career journey",
+  "Walk me through his work experience",
+  "What are his current and previous roles?",
   "tell me about yourself",
   "what do you do?",
 ])
@@ -112,6 +118,23 @@ test("greeting is useful and broad intent does not swallow unsupported subjects"
   );
 });
 test("short overview includes substantive projects and tool names, not just marketing labels", () => {
+  const experience = composeAnswer(
+    index,
+    "tell me about his experience and work in IT",
+  );
+  assert.match(
+    experience.answer,
+    /10\+ years of IT experience and 8\+ years in DevOps/,
+  );
+  assert.match(experience.answer, /Bluebeam/);
+  assert.match(experience.answer, /MKS Vision/);
+  assert.match(experience.answer, /AVYA/);
+  for (const question of [
+    "Tell me about his experience in quantum computing",
+    "Tell me about his experience and work in aerospace",
+    "What is his experience in production GPU infrastructure?",
+  ])
+    assert.notEqual(search(index, question).intent, "experience");
   const projects = composeAnswer(index, "explain projects");
   assert.match(projects.answer, /K3s/);
   assert.match(projects.answer, /GitLab/);

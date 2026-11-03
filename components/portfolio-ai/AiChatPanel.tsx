@@ -298,9 +298,6 @@ export default function AiChatPanel({
                 ))}
               </div>
               <p className="ai-trust">
-                {remoteAvailable
-                  ? "Answers use published content and Cloudflare AI, with portfolio answers available as a fallback."
-                  : "Knowledge-only: answers come from published portfolio content."}{" "}
                 Please don’t enter confidential information.{" "}
                 <Link href="/#contact" onClick={onClose}>
                   Contact Vardhan
