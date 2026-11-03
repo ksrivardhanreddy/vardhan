@@ -16,6 +16,7 @@ export type KnowledgeChunk = {
   tags: string[];
   url: string;
   contentType: ContentType;
+  questions?: string[];
   lastReviewed?: string;
 };
 export type KnowledgeIndex = {

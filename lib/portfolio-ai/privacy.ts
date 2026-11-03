@@ -1,6 +1,6 @@
 /** Deliberately conservative policy gates. No visitor text is logged/stored. */
 export function blockedQuestion(question: string): boolean {
-  return /(?:salary|home address|residen(?:ce|tial)|family|medical|password|secret|api[ -]?key|private (?:company|employer|incident|network|address)|internal (?:ticket|incident|domain)|ignore.{0,40}(?:rules|instructions)|system prompt|invent|pretend|fabricat|jailbreak|cat poem|write.{0,20}poem|service discovery|(?:how many|years|tenure).{0,45}(?:kubernetes|k8s)|(?:70b|gpu|llm|inference).{0,35}(?:production|operat|serving)|production.{0,35}(?:llm|inference|gpu))/i.test(
+  return /(?:home address|residen(?:ce|tial)|family|medical|password|secret|api[ -]?key|private (?:company|employer|incident|network|address)|internal (?:ticket|incident|domain)|ignore.{0,40}(?:rules|instructions)|system prompt|invent|pretend|fabricat|jailbreak|cat poem|write.{0,20}poem|service discovery)/i.test(
     question,
   );
 }
@@ -44,6 +44,12 @@ export function validateIndex(
         (x) => typeof x === "string" && !!x.trim(),
       ) ||
       c.text.length > 6000 ||
+      (c.questions !== undefined &&
+        (!Array.isArray(c.questions) ||
+          c.questions.length > 20 ||
+          !c.questions.every(
+            (q) => typeof q === "string" && q.length > 0 && q.length <= 500,
+          ))) ||
       !Array.isArray(c.tags) ||
       !c.tags.every((x) => typeof x === "string") ||
       !safeSourceUrl(c.url) ||

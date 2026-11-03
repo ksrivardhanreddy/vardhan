@@ -19,6 +19,7 @@ import {
 } from "../content/portfolio.ts";
 import { publishedLabArticles } from "../content/lab/articles.ts";
 import { labRoadmap } from "../content/lab/roadmap.ts";
+import { careerFaq } from "../content/ai/career-faq.ts";
 const contentTypes = [
   "about",
   "experience",
@@ -311,6 +312,28 @@ export function buildIndex(root = process.cwd()) {
         basename(file, ".md"),
       ),
     );
+  if (manifest.generatedPublicContent) {
+    for (const faq of careerFaq) {
+      if (
+        !allowedUrl(faq.url) ||
+        privatePattern.test(faq.answer) ||
+        faq.questions.some((q) => privatePattern.test(q))
+      )
+        throw new Error(`Unsafe FAQ: ${faq.id}`);
+      chunks.push({
+        id: `faq-${faq.id}::answer`,
+        documentId: `faq-${faq.id}`,
+        title: faq.questions[0],
+        heading: faq.category,
+        text: faq.answer,
+        tags: [faq.category, faq.kind, faq.origin],
+        questions: faq.questions,
+        url: faq.url,
+        contentType: "about",
+        lastReviewed: "2026-10-25",
+      });
+    }
+  }
   if (!chunks.length || new Set(chunks.map((c) => c.id)).size !== chunks.length)
     throw new Error("Empty corpus or duplicate chunk IDs");
   const corpusVersion = createHash("sha256")

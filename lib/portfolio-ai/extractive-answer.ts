@@ -19,6 +19,12 @@ export function sourcesFor(results: SearchResult[]): SourceLink[] {
 }
 export function composeAnswer(index: KnowledgeIndex, question: string): Answer {
   const retrieval = search(index, question);
+  if (retrieval.results[0]?.chunk.questions)
+    return {
+      mode: "knowledge",
+      answer: retrieval.results[0].chunk.text,
+      sources: sourcesFor(retrieval.results),
+    };
   if (retrieval.intent === "greeting")
     return {
       mode: "knowledge",

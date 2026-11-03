@@ -68,11 +68,13 @@ export function queryTokens(text: string): string[] {
 export function search(index: KnowledgeIndex, question: string): Retrieval {
   if (!validQuestion(question) || blockedQuestion(question))
     return { state: "none", results: [], direct: true };
+  const faq = matchCareerFaq(index, question);
+  if (faq) return { state: "matched", results: [faq], direct: true };
   const intent = overviewIntent(question);
   if (intent) return overviewRetrieval(index, intent);
   const tokens = queryTokens(question);
   if (!tokens.length) return { state: "none", results: [], direct: true };
-  let candidates = index.chunks;
+  let candidates = index.chunks.filter((c) => !c.questions);
   if (/linkedin/i.test(question))
     candidates = candidates.filter((c) => c.documentId === "linkedin");
   else if (/resume|résumé/i.test(question))
@@ -98,15 +100,17 @@ export function search(index: KnowledgeIndex, question: string): Retrieval {
     candidates.length > 1 &&
     candidates.every((c) => c.contentType === "certification");
   const originals = new Set(tokenize(question).filter((t) => !stop.has(t)));
-  const allDocs = index.chunks.map((chunk) => ({
-    chunk,
-    fields: [
-      tokenize(chunk.title),
-      tokenize(chunk.heading),
-      tokenize(chunk.tags.join(" ")),
-      tokenize(chunk.text),
-    ],
-  }));
+  const allDocs = index.chunks
+    .filter((c) => !c.questions)
+    .map((chunk) => ({
+      chunk,
+      fields: [
+        tokenize(chunk.title),
+        tokenize(chunk.heading),
+        tokenize(chunk.tags.join(" ")),
+        tokenize(chunk.text),
+      ],
+    }));
   const candidateIds = new Set(candidates.map((c) => c.id));
   const docs = allDocs.filter((d) => candidateIds.has(d.chunk.id));
   const averages = [0, 1, 2, 3].map(
@@ -186,4 +190,99 @@ export function search(index: KnowledgeIndex, question: string): Retrieval {
     results: selected,
     direct,
   };
+}
+
+/** Conservative FAQ routing: exact phrasing or near-complete token overlap.
+ * Ambiguous matches fall through to normal retrieval rather than guessing. */
+function matchCareerFaq(
+  index: KnowledgeIndex,
+  question: string,
+): SearchResult | undefined {
+  const normalized = (s: string) =>
+    tokenize(s)
+      .filter((t) => t !== "please")
+      .join(" ");
+  const exact = index.chunks.filter((c) =>
+    c.questions?.some((q) => normalized(q) === normalized(question)),
+  );
+  if (exact.length === 1)
+    return { chunk: exact[0], score: 2, matchedTokens: [], coverage: 1 };
+  // Answer bounded missing-fact topics without letting BM25 infer a positive claim.
+  const boundaryId = /salary|compensation/i.test(question)
+    ? "salary-boundary"
+    : /(?:how many|years|tenure).{0,45}(?:kubernetes|k8s|terraform|aws|eks)/i.test(
+          question,
+        )
+      ? "technology-tenure"
+      : /(?:70b|gpu|llm|inference).{0,35}(?:production|operat|serving)|production.{0,35}(?:llm|inference|gpu)/i.test(
+            question,
+          )
+        ? "learning-status"
+        : /career break|employment gap|career gap/i.test(question)
+          ? "career-gaps"
+          : /sponsor|work authori[sz]ation|visa/i.test(question)
+            ? "sponsorship"
+            : /notice|(?:earliest|soon|when (?:can|could|would)).{0,30}(?:start|join)|start date|immediate join/i.test(
+                  question,
+                )
+              ? "notice-period"
+              : /(?:relocat|move).{0,35}(?:abroad|overseas|countr|international)|(?:abroad|overseas|international).{0,25}(?:relocat|opportunit)/i.test(
+                    question,
+                  )
+                ? "relocation"
+                : /(?:prefer|location|city).{0,30}(?:india|hyderabad)|(?:india|hyderabad).{0,30}(?:prefer|location|city)/i.test(
+                      question,
+                    )
+                  ? "india-location"
+                  : /(?:open|accept|prefer|arrangement).{0,30}(?:remote|hybrid|on.site)|(?:remote|hybrid|on.site).{0,30}(?:work|arrangement)/i.test(
+                        question,
+                      )
+                    ? "work-arrangement"
+                    : /(?:looking|exploring|open|available).{0,30}(?:job|opportunit|interview)|(?:recruiter).{0,25}(?:approach|contact)/i.test(
+                          question,
+                        )
+                      ? "availability"
+                      : /direct reports|team size|manag.{0,15}team|mentor|leadership/i.test(
+                            question,
+                          )
+                        ? "leadership"
+                        : /(?:experience|\bexp\b).{0,25}(?:total|overall)|(?:total|overall|years|much|long).{0,30}(?:experience|\bexp\b)|(?:years|long).{0,25}devops/i.test(
+                              question,
+                            )
+                          ? /devops/i.test(question)
+                            ? "devops-years"
+                            : "experience-total"
+                          : undefined;
+  if (boundaryId) {
+    const chunk = index.chunks.find(
+      (c) => c.documentId === `faq-${boundaryId}`,
+    );
+    if (chunk) return { chunk, score: 2, matchedTokens: [], coverage: 1 };
+  }
+  const key = normalized(question);
+  const raw = new Set(tokenize(question).filter((t) => !stop.has(t)));
+  const ranked = index.chunks
+    .filter((c) => c.questions)
+    .map((chunk) => {
+      let score = 0;
+      for (const candidate of chunk.questions ?? []) {
+        if (normalized(candidate) === key) {
+          score = 2;
+          break;
+        }
+        const terms = new Set(tokenize(candidate).filter((t) => !stop.has(t)));
+        const overlap = [...raw].filter((t) => terms.has(t)).length;
+        const coverage = overlap / Math.max(raw.size, 1);
+        const similarity =
+          overlap / Math.max(new Set([...raw, ...terms]).size, 1);
+        if (overlap >= 2 && coverage >= 0.8 && similarity >= 0.6)
+          score = Math.max(score, similarity);
+      }
+      return { chunk, score, matchedTokens: [...raw], coverage: 1 };
+    })
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score);
+  if (!ranked[0] || (ranked[1] && ranked[0].score - ranked[1].score < 0.08))
+    return undefined;
+  return ranked[0];
 }

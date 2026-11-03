@@ -1,4 +1,11 @@
-import { profile, experience, expertise, certifications } from "../portfolio";
+import {
+  profile,
+  experience,
+  expertise,
+  certifications,
+  work,
+} from "../portfolio";
+import { publishedLabArticles } from "../lab/articles";
 import { ownerCareerProfile as owner, education } from "./owner-profile";
 export type CareerFaq = {
   id: string;
@@ -572,5 +579,137 @@ for (const cert of certifications)
     `${cert.name}, issued by ${cert.issuer}: ${cert.status}. ${cert.short === "RHCE" ? "This is a historical, expired credential; its verification record remains linked on the portfolio." : "An exact expiry date is not published in the portfolio."}`,
     certs,
   );
-/** Checkpoint: catalog is still being expanded; not connected to the index yet. */
+for (const item of work) {
+  add(
+    `professional-${item.id}`,
+    "professional-projects",
+    [`Explain ${item.title}`, `Describe the ${item.title} project`],
+    `Professional work: ${item.description} ${item.contribution} ${item.result} ${item.constraints}`,
+    `/#${item.id}`,
+  );
+}
+for (const article of publishedLabArticles) {
+  const overview = article.sections.find((s) => s.paragraphs?.length);
+  add(
+    `personal-${article.slug}`,
+    "personal-lab",
+    [`Explain ${article.title}`, `Tell me about ${article.title}`],
+    `Personal lab — ${article.status}. ${overview?.paragraphs?.slice(0, 2).join(" ") ?? article.title} This is personal hands-on work, not an employer production deployment.`,
+    `/lab/${article.slug}`,
+  );
+}
+for (const [id, questions, answer, url] of [
+  [
+    "lab-kubernetes",
+    [
+      "How is your personal Kubernetes lab organized?",
+      "Describe your Proxmox K3s architecture",
+    ],
+    "Personal lab: Proxmox hosts K3s with a control-plane node and a worker. NGINX Ingress routes HTTP traffic, MetalLB provides local LoadBalancer addresses, and kube-prometheus-stack provides monitoring. This does not establish production high availability.",
+    kube,
+  ],
+  [
+    "lab-monitoring",
+    [
+      "What monitoring runs in your home lab?",
+      "Describe personal lab observability",
+    ],
+    "Personal lab: kube-prometheus-stack supplies Prometheus and Grafana, with Grafana reached through ingress. Public documentation does not verify persistent storage, retention, hardened TLS or external alert delivery.",
+    obs,
+  ],
+  [
+    "docker-conflict",
+    [
+      "What caused the empty docker ps output?",
+      "Explain the Snap and apt Docker conflict",
+    ],
+    "Personal troubleshooting: separate Snap and apt Docker installations created confusion about which daemon owned the running containers. The case study describes investigating daemon ownership rather than assuming the containers had disappeared.",
+    docker,
+  ],
+  [
+    "dns-recovery",
+    [
+      "What DNS problem did you troubleshoot?",
+      "Explain your Tailscale resolver issue",
+    ],
+    "Personal troubleshooting: the documented issue concerned resolver ownership involving Tailscale and systemd-resolved. The published case study explains the diagnosis and correction without disclosing private network endpoints.",
+    dns,
+  ],
+  [
+    "bridge-recovery",
+    [
+      "How did you recover networking after replacing the motherboard?",
+      "Explain Proxmox bridge recovery",
+    ],
+    "Personal troubleshooting: hardware changes affected network-interface identity and the Proxmox bridge mapping. The case study describes restoring the correct interface-to-bridge configuration and validating connectivity.",
+    nic,
+  ],
+  [
+    "maintenance",
+    [
+      "How do you maintain the home lab?",
+      "What does your operational checklist cover?",
+    ],
+    "The personal lab maintenance checklist covers checking platform health and validating workloads and connectivity after changes. It is a published operating checklist, not evidence of a measured availability SLA or a completed disaster-recovery exercise.",
+    maintenance,
+  ],
+  [
+    "learning-status",
+    [
+      "Have you deployed production AI infrastructure?",
+      "What AI infrastructure have you completed?",
+      "Are you running production LLM inference?",
+    ],
+    "AI infrastructure, model serving and related GitOps experiments are learning or planned directions in the public portfolio. No completed employer production LLM deployment, GPU fleet ownership or inference performance measurement is claimed.",
+    "/lab",
+  ],
+  [
+    "technology-tenure",
+    [
+      "How many years of Kubernetes experience do you have?",
+      "How many years with Terraform?",
+      "How many years with AWS?",
+    ],
+    "Vardhan confirms 10+ years of IT experience and 8+ years in DevOps. Exact years with each individual technology are not published; please ask him directly rather than treating the overall DevOps total as tool-specific tenure.",
+    opp,
+  ],
+  [
+    "measurements",
+    [
+      "What cost savings have you achieved?",
+      "What uptime improvement can you prove?",
+      "Do you have quantified project results?",
+    ],
+    "The public case studies describe technical contributions and qualitative outcomes. Verified cost-saving percentages, availability improvements and infrastructure scale measurements are not published; the assistant cannot supply invented figures.",
+    "/#work",
+  ],
+  [
+    "behavioral",
+    [
+      "Tell me about a difficult technical problem",
+      "Give an example of troubleshooting under pressure",
+    ],
+    "A documented professional example is EKS incident investigation involving Redis degradation, pod evictions, workload requests and node health. Personal troubleshooting examples are separately documented in the Engineering Lab. Interview-specific details and personal reflections should be discussed directly with Vardhan.",
+    "/#eks-incident-investigation",
+  ],
+  [
+    "salary-boundary",
+    ["What is your expected salary?", "What is your current compensation?"],
+    "Compensation details are not published. Please contact Vardhan directly to discuss the role and compensation.",
+    "/#contact",
+  ],
+  [
+    "references",
+    ["Can you provide references?", "Can you share client contacts?"],
+    "References and client contact details are not published. Please contact Vardhan directly for any appropriate reference discussion.",
+    "/#contact",
+  ],
+  [
+    "contact-link",
+    ["How can I reach Vardhan?", "How do I arrange an interview?"],
+    `Contact Vardhan at ${profile.email}, or use his LinkedIn profile linked from the portfolio. Interview times must be agreed directly; this assistant cannot book meetings.`,
+    "/#contact",
+  ],
+] as [string, string[], string, string][])
+  add(id, "career-details", questions, answer, url, "boundary", "public-limit");
 export const careerFaq = entries;
