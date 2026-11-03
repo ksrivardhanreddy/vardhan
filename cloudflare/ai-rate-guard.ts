@@ -1,4 +1,4 @@
-/** Proposed internal service only. No public route; not deployed by this task. */
+/** Internal rate-limit service. No public route or workers.dev endpoint. */
 type GuardEnv = {
   VISITOR_LIMIT: {
     limit(input: { key: string }): Promise<{ success: boolean }>;

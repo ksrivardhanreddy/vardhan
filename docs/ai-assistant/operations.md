@@ -2,7 +2,7 @@
 
 ## Current state
 
-Local implementation only, branch `feature/portfolio-ai-assistant`. No commits, pushes, previews, deployment, account mutations or real inference calls are authorized/performed. Existing Pages project is dashboard-managed and remains static until an approved release adds its narrow Function. Website canonical host is `https://www.vardhan.pro`; apex redirects remain unchanged.
+The assistant is deployed on the `vardhan` Cloudflare Pages project. Its local knowledge answers work without inference. Production configuration now includes a dedicated Turnstile widget for `www.vardhan.pro`, the `AI` binding, and a private `AI_RATE_GUARD` service binding. The production variables enable the optional AI mode at the next build; verify a live challenged request before reporting real inference as working. The canonical host is `https://www.vardhan.pro`; apex redirects remain unchanged.
 
 Knowledge-only chat works without Cloudflare bindings or API availability. It loads the panel and 44KB public index only after opening; the index is cached in memory for this tab, and questions/history remain in memory. Optional AI phrasing sends the current question and one short-lived token only. The server loads the same canonical generated index independently; callers cannot submit prompts, models, snippets, histories or URLs.
 
@@ -46,7 +46,7 @@ The client must separately opt into AI phrasing. A fresh Turnstile challenge is 
 
 ## Free-tier infrastructure decision / release blocker
 
-No rate-limit rule currently exists for the portfolio. Workers rate-limit bindings are not documented as Pages bindings. Proposed adapter: `AI_RATE_GUARD` is a Pages-supported service binding to an internal Worker that uses real Cloudflare rate-limit bindings (5/60seconds per transient visitor key and30/60seconds overall). `cloudflare/rate-guard.example.jsonc` is an EXAMPLE, not an authoritative Pages config, and has no public workers.dev endpoint. Namespace IDs must be checked for collision and changed if necessary before approved setup. All infrastructure is still absent.
+`AI_RATE_GUARD` is a Pages service binding to the deployed `vardhan-ai-rate-guard` Worker. Its source is `cloudflare/ai-rate-guard.ts` and deploy configuration is `cloudflare/wrangler.rate-guard.jsonc`. It has no public workers.dev endpoint or preview URL. Its rate-limit bindings allow 5 requests per minute per transient visitor key and 30 requests per minute across a Cloudflare location. Only requests with a valid Turnstile token consume the rate-limit allowance. Live 429 behavior still needs a controlled check.
 
 Cloudflare documents one WAF rate-limit rule for a Free website zone. A verified zone-rule approach could be a smaller alternative; it needs an ADR/code adjustment and verified coverage, including preventing bypass through pages.dev hosts. Do not pretend an env flag, browser cooldown, in-memory Map or caller-provided header is rate-limit enforcement. Do not create a paid rate-limiting product or new storage. If compatible free enforcement cannot be confirmed, keep remote inference OFF and retain the useful knowledge-only assistant.
 
@@ -54,26 +54,22 @@ The internal service guard consumes additional Workers requests. The key is a tr
 
 ## Cost policy
 
-**Free tier only. Never enable Workers Paid, buy credits or switch to a paid provider.** Zone `Free Website` was confirmed read-only, but it does not establish the separate Workers subscription. Verify it before setting AI_FREE_TIER_CONFIRMED. If the account is on Workers Paid, leave inference off rather than assume an unenforced free-only daily budget.
+**Free tier only. Never enable Workers Paid, buy credits or switch to a paid provider.** The account's Workers subscription was confirmed as Workers Free in Cloudflare dashboard before setting `AI_FREE_TIER_CONFIRMED=true`. Recheck the subscription and pricing before changing the model or guard.
 
 Cloudflare pricing currently provides10,000 shared account neurons/day, resets00:00UTC (05:30IST), and stops Free-plan inference on exhaustion. Functions share the Workers Free100,000requests/day pool; static paths bypass Functions and remain static. Index/BM25/local answers have no inference cost. Verify current terms and actual account usage at release.
 
-The suggested fp8-fast model appears in public pricing but was absent from the exact catalog query. The regular fp88B model was returned by the account catalog, so it is the conservative provisional default; neither is enabled or benchmarked. Catalog listing is not a proven successful account inference. No Qwen switch or real-AI A/B benchmark occurred. The sample neuron estimator applies only to fp8-fast's documented4119input /34868output neurons per million tokens:1375input+200output ≈12.64neurons. This is an illustration, NOT measured usage or promised daily capacity, and must not be applied to the regular fp8 model. Real dashboard usage is authoritative.
+The suggested fp8-fast model appears in public pricing but was absent from the exact catalog query. The regular fp8 8B model was returned by the account catalog and is the configured default. Its successful inference remains unverified. No Qwen switch or real-AI A/B benchmark occurred. The sample neuron estimator applies only to fp8-fast's documented 4,119 input / 34,868 output neurons per million tokens: 1,375 input + 200 output ≈ 12.64 neurons. This is an illustration, not measured usage or promised daily capacity, and must not be applied to the regular fp8 model. Real dashboard usage is authoritative.
 
 ## Telemetry and privacy
 
 No raw questions, responses, exact IP addresses, user identities or user-agent fingerprints are logged or retained by application code. Optional server logs contain only outcome categories, mode and elapsed milliseconds. Browser data stays in this page's memory and clears on reload/clear. Existing Cloudflare analytics/settings were not changed. Cloudflare may process requests under its own terms; do not promise zero platform retention. There is no public health/binding endpoint.
 
-## Approved release sequence (NOT executed)
+## Release and verification sequence
 
-1. Review diff/public corpus and actual extraction quality, including professional vs lab vs learning distinctions. Keep unrelated work/private sources excluded.
-2. Reconfirm Workers Free subscription/model availability and shared usage without enabling billing. Approve isolated preview/resource setup separately.
-3. Keep dashboard config source of truth; do not overwrite it with Wrangler examples. Add preview-only AI, encrypted TURNSTILE_SECRET, correct exact origin and a dedicated Turnstile widget. Do not modify unrelated widget domains.
-4. Confirm free guard availability and configure the approved service/limiter with no public route. Bind AI_RATE_GUARD. Verify actual429behavior and missing-binding fail-closed behavior in Cloudflare.
-5. Functions must include only /api/chat via `_routes.json`. Static home, Lab, résumé and knowledge JSON should not invoke a Function. No DNS changes.
-6. Run tests/build, then a small separately approved real-AI sample (3–5questions). Verify invalid/replayed tokens never infer, accurate citations, actual latency/usage and exhausted-quota fallback. No unattended benchmark loops.
-7. Only after explicit owner approval, merge/push through the existing Git integration. Use inference off initially, then enable server/public flags only after security and free-tier smoke checks. Any branch push creates an external preview, so do not push casually.
-8. Monitor actual Workers AI usage and Functions volume. Free quota exhaustion must give local answers, not a plan upgrade.
+1. Keep the Pages dashboard configuration as source of truth. The repo's Wrangler configuration applies only to the private rate-guard Worker; do not overwrite unrelated Pages settings.
+2. Build and deploy through the existing Git integration. Only `/api/chat` should invoke a Function via `_routes.json`; static pages and knowledge JSON should remain static.
+3. Check the live UI on `www.vardhan.pro`: knowledge answers, optional AI mode, Turnstile challenge, sourced answer and fallback. Check invalid tokens and rate-limit responses without repeated inference calls.
+4. Monitor Workers AI usage and Functions volume. Free quota exhaustion must give local answers, not a plan upgrade.
 
 ## Kill switch and rollback
 
@@ -90,4 +86,4 @@ Set server AI_ASSISTANT_ENABLED=false (and/or AI_MODE=off) and redeploy the affe
 
 ## Verification limitations
 
-Billing subscriptions could not be read through the OAuth connector (403, billing scope unavailable). Keep AI_FREE_TIER_CONFIRMED unset until the owner checks the Workers subscription. Browser automation and the native Chrome fallback timed out; UI compiles and static/HTTP tests pass, but responsive visual/focus/soft-keyboard checks are not certified. Review them manually locally before any release. No screenshot has been fabricated.
+The Workers Free subscription was confirmed in the dashboard. Tests cover handler, guard, retrieval, export, and local mock behavior. A production AI response and actual quota consumption remain unverified until a successful live challenged request. Cloudflare rate-limit counters are location-local and approximate.

@@ -172,27 +172,6 @@ export function createChatHandler(
         const model = env.AI_MODEL ?? ALLOWED_MODELS[0];
         if (!(ALLOWED_MODELS as readonly string[]).includes(model))
           return fail("AI_UNAVAILABLE", 503);
-        const ip = request.headers.get("CF-Connecting-IP");
-        if (!ip) return fail("VERIFICATION_REQUIRED", 403);
-        // Service-bound guard is not caller-controlled. No public URL or visitor snippets accepted.
-        const digest = await crypto.subtle.digest(
-          "SHA-256",
-          new TextEncoder().encode(
-            `${new Date().toISOString().slice(0, 10)}:${ip}`,
-          ),
-        );
-        const key = Array.from(new Uint8Array(digest), (b) =>
-          b.toString(16).padStart(2, "0"),
-        ).join("");
-        const guard = await env.AI_RATE_GUARD.fetch(
-          new Request("https://rate-guard.internal/check", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ key }),
-          }),
-        );
-        if (guard.status === 429) return fail("RATE_LIMITED", 429);
-        if (!guard.ok) return fail("AI_UNAVAILABLE", 503);
         const verified = await (deps.fetcher ?? fetch)(
           "https://challenges.cloudflare.com/turnstile/v0/siteverify",
           {
@@ -223,6 +202,28 @@ export function createChatHandler(
         )
           return fail("VERIFICATION_REQUIRED", 403);
         if (controller.signal.aborted) return fail("AI_TIMEOUT", 504);
+        const ip = request.headers.get("CF-Connecting-IP");
+        if (!ip) return fail("VERIFICATION_REQUIRED", 403);
+        // Only validated visitors consume the shared rate-limit allowance.
+        // The service-bound guard has no public URL or caller-controlled key.
+        const digest = await crypto.subtle.digest(
+          "SHA-256",
+          new TextEncoder().encode(
+            `${new Date().toISOString().slice(0, 10)}:${ip}`,
+          ),
+        );
+        const key = Array.from(new Uint8Array(digest), (b) =>
+          b.toString(16).padStart(2, "0"),
+        ).join("");
+        const guard = await env.AI_RATE_GUARD.fetch(
+          new Request("https://rate-guard.internal/check", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ key }),
+          }),
+        );
+        if (guard.status === 429) return fail("RATE_LIMITED", 429);
+        if (!guard.ok) return fail("AI_UNAVAILABLE", 503);
         const prompt = buildPrompt(question, retrieval.results);
         if (!prompt.used.length) return fail("NOT_ENOUGH_EVIDENCE", 422);
         const max = Number(env.AI_MAX_OUTPUT_TOKENS ?? 280);

@@ -245,6 +245,7 @@ for (const [name, verification] of [
     const f = fixture({ verify: verification });
     assert.equal((await f.handler(f.req(), f.env)).status, 403);
     assert.equal(f.calls.ai, 0);
+    assert.equal(f.calls.guard, 0);
   });
 test("reusing a token fails Siteverify; no server replay bypass", async () => {
   const f = fixture();
@@ -270,7 +271,7 @@ test("real rate guard protocol failure blocks invocation", async () => {
     const f = fixture({ guard });
     assert.equal((await f.handler(f.req(), f.env)).status, guard);
     assert.equal(f.calls.ai, 0);
-    assert.equal(f.calls.verify, 0);
+    assert.equal(f.calls.verify, 1);
   }
   let count = 0;
   const limiter = { limit: async () => ({ success: ++count <= 1 }) };
