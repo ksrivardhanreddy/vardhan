@@ -4,7 +4,7 @@
 
 The assistant is deployed on the `vardhan` Cloudflare Pages project. Its local knowledge answers work without inference. Production configuration now includes a dedicated Turnstile widget for `www.vardhan.pro`, the `AI` binding, and a private `AI_RATE_GUARD` service binding. The production variables enable the optional AI mode at the next build; verify a live challenged request before reporting real inference as working. The canonical host is `https://www.vardhan.pro`; apex redirects remain unchanged.
 
-Knowledge-only chat works without Cloudflare bindings or API availability. It loads the panel and 44KB public index only after opening; the index is cached in memory for this tab, and questions/history remain in memory. Optional AI phrasing sends the current question and one short-lived token only. The server loads the same canonical generated index independently; callers cannot submit prompts, models, snippets, histories or URLs.
+Knowledge-only chat works without Cloudflare bindings or API availability. It loads the panel and 44KB public index only after opening; the index is cached in memory for this tab, and questions/history remain in memory. Automatic AI requests send the current question and one short-lived token only. The server loads the same canonical generated index independently; callers cannot submit prompts, models, snippets, histories or URLs.
 
 ## Public content workflow
 
@@ -42,7 +42,7 @@ No actual credentials in the repository. `.dev.vars`, .env files, generated arti
 | AI_MAX_OUTPUT_TOKENS | 280 | integer1–280 |
 | AI_TELEMETRY | false | optional category/mode/latency-only events, no transcript or IP |
 
-The client must separately opt into AI phrasing. A fresh Turnstile challenge is requested per remote send. Siteverify checks success, current host, `portfolio_chat` action and five-minute age. Cloudflare enforces token single use; tests simulate replay rejection. Origin checks are defense in depth, not authentication. No wildcard CORS. No retries or automatic paid fallback. Only one inference is possible for a valid request. HTTP payload cap4096bytes includes up to2048characters of Turnstile token plus the ≤500character question; requests exceeding the byte limit are rejected before JSON parsing. Evidence/prompt characters and output tokens are bounded, with a finite deadline. Upstream errors are sanitized.
+The client automatically attempts AI for supported technical questions when production AI settings are present. Approved recruiter facts, broad overviews and unsupported topics use deterministic knowledge answers. Verification, network, quota or model failures retain the already-computed knowledge answer. A fresh Turnstile challenge is requested per remote send. Siteverify checks success, current host, `portfolio_chat` action and five-minute age. Cloudflare enforces token single use; tests simulate replay rejection. Origin checks are defense in depth, not authentication. No wildcard CORS. No retries or automatic paid fallback. Only one inference is possible for a valid request. HTTP payload cap4096bytes includes up to2048characters of Turnstile token plus the ≤500character question; requests exceeding the byte limit are rejected before JSON parsing. Evidence/prompt characters and output tokens are bounded, with a finite deadline. Upstream errors are sanitized.
 
 ## Free-tier infrastructure decision / release blocker
 
@@ -68,7 +68,7 @@ No raw questions, responses, exact IP addresses, user identities or user-agent f
 
 1. Keep the Pages dashboard configuration as source of truth. The repo's Wrangler configuration applies only to the private rate-guard Worker; do not overwrite unrelated Pages settings.
 2. Build and deploy through the existing Git integration. Only `/api/chat` should invoke a Function via `_routes.json`; static pages and knowledge JSON should remain static.
-3. Check the live UI on `www.vardhan.pro`: knowledge answers, optional AI mode, Turnstile challenge, sourced answer and fallback. Check invalid tokens and rate-limit responses without repeated inference calls.
+3. Check the live UI on `www.vardhan.pro`: automatic AI requests, Turnstile challenge, sourced answers and knowledge fallback. Check invalid tokens and rate-limit responses without repeated inference calls.
 4. Monitor Workers AI usage and Functions volume. Free quota exhaustion must give local answers, not a plan upgrade.
 
 ## Kill switch and rollback

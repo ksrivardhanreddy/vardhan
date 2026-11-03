@@ -53,7 +53,6 @@ export default function AiChatPanel({
     [index, setIndex] = useState<KnowledgeIndex | null>(null),
     [loadError, setLoadError] = useState(false),
     [busy, setBusy] = useState(false),
-    [useAi, setUseAi] = useState(false),
     [notice, setNotice] = useState("");
   const panel = useRef<HTMLDivElement>(null),
     input = useRef<HTMLTextAreaElement>(null),
@@ -160,7 +159,6 @@ export default function AiChatPanel({
     const timer = setTimeout(() => controller.abort(), 20000);
     try {
       if (
-        useAi &&
         remoteAvailable &&
         retrieval.results.length &&
         !retrieval.direct &&
@@ -199,9 +197,7 @@ export default function AiChatPanel({
       }
     } catch {
       if (alive.current)
-        setNotice(
-          "Showing portfolio excerpts while AI phrasing is unavailable.",
-        );
+        setNotice("Answered from published portfolio content.");
     } finally {
       clearTimeout(timer);
       sending.current = false;
@@ -303,7 +299,7 @@ export default function AiChatPanel({
               </div>
               <p className="ai-trust">
                 {remoteAvailable
-                  ? "Answers use published content. Optional AI phrasing uses Cloudflare."
+                  ? "Answers use published content and Cloudflare AI, with portfolio answers available as a fallback."
                   : "Knowledge-only: answers come from published portfolio content."}{" "}
                 Please don’t enter confidential information.{" "}
                 <Link href="/#contact" onClick={onClose}>
@@ -377,17 +373,6 @@ export default function AiChatPanel({
           )}
         </div>
         <form className="ai-form" onSubmit={submit}>
-          {remoteAvailable && (
-            <label className="ai-opt-in">
-              <input
-                type="checkbox"
-                checked={useAi}
-                onChange={(event) => setUseAi(event.target.checked)}
-                disabled={busy}
-              />{" "}
-              Use AI phrasing via Cloudflare
-            </label>
-          )}
           <div ref={verification} className="ai-verification" />
           <label htmlFor="ai-question">Your portfolio question</label>
           <textarea

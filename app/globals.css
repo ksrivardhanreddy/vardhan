@@ -3310,18 +3310,6 @@ details[open] .job-details summary > svg,
   font-size: 14px;
   margin-bottom: 5px;
 }
-.ai-form .ai-opt-in {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  font-size: 14px;
-}
-.ai-opt-in input {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--orange);
-}
 .ai-form textarea {
   display: block;
   width: 100%;

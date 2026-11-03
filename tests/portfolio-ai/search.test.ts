@@ -81,6 +81,12 @@ for (const question of [
   "skills",
   "tell me about your experience",
   "experience",
+  "whats his experience?",
+  "what's his experience?",
+  "What’s his experience?",
+  "whats your experience",
+  "whats his skills?",
+  "whats his projects?",
   "tell me about yourself",
   "what do you do?",
 ])

@@ -11,6 +11,8 @@ export function overviewIntent(question: string): OverviewIntent | undefined {
   const normalized = question
     .normalize("NFKC")
     .toLowerCase()
+    .replace(/\bwhat[’']?s\b/g, "what is")
+    .replace(/\b(?:he[’']s)\b/g, "he is")
     .replace(/[^a-z\s]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
