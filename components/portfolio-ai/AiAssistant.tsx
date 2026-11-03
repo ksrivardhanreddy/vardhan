@@ -40,9 +40,9 @@ export function AiAssistant() {
   const [open, setOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const launcher = useRef<HTMLButtonElement>(null);
-  function close() {
+  function close(restoreFocus = true) {
     setOpen(false);
-    requestAnimationFrame(() => launcher.current?.focus());
+    if (restoreFocus) requestAnimationFrame(() => launcher.current?.focus());
   }
   if (process.env.NEXT_PUBLIC_AI_WIDGET_ENABLED === "false") return null;
   return (
@@ -65,18 +65,22 @@ export function AiAssistant() {
         </button>
       )}
       {loaded && (
-        <PanelBoundary open={open} onClose={close}>
+        <PanelBoundary open={open} onClose={() => close()}>
           <Suspense
             fallback={
               open ? (
                 <div className="ai-loading-panel" role="status">
                   Loading portfolio assistant…{" "}
-                  <button onClick={close}>Close</button>
+                  <button onClick={() => close()}>Close</button>
                 </div>
               ) : null
             }
           >
-            <Panel open={open} onClose={close} />
+            <Panel
+              open={open}
+              onClose={() => close()}
+              onDismiss={() => close(false)}
+            />
           </Suspense>
         </PanelBoundary>
       )}

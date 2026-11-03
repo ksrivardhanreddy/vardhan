@@ -42,9 +42,11 @@ function loadIndex() {
 export default function AiChatPanel({
   open,
   onClose,
+  onDismiss,
 }: {
   open: boolean;
   onClose: () => void;
+  onDismiss: () => void;
 }) {
   const [messages, setMessages] = useState<UiMessage[]>([]),
     [question, setQuestion] = useState(""),
@@ -118,13 +120,20 @@ export default function AiChatPanel({
         first.focus();
       }
     }
+    function outsideClick(event: Event) {
+      if (!panel.current?.contains(event.target as Node)) onDismiss();
+    }
     document.addEventListener("keydown", keydown);
+    document.addEventListener("pointerdown", outsideClick, true);
+    document.addEventListener("click", outsideClick, true);
     return () => {
       document.body.style.overflow = oldOverflow;
       document.removeEventListener("keydown", keydown);
+      document.removeEventListener("pointerdown", outsideClick, true);
+      document.removeEventListener("click", outsideClick, true);
       previous?.focus();
     };
-  }, [open, onClose]);
+  }, [open, onClose, onDismiss]);
   useEffect(() => {
     list.current?.scrollTo({
       top: list.current.scrollHeight,
@@ -237,7 +246,6 @@ export default function AiChatPanel({
         role="dialog"
         aria-modal="true"
         aria-labelledby="ai-title"
-        aria-describedby="ai-description"
         className="ai-panel"
       >
         <header className="ai-header">
@@ -267,16 +275,6 @@ export default function AiChatPanel({
             </button>
           </div>
         </header>
-        <p id="ai-description" className="ai-description">
-          Explore my experience, infrastructure projects, skills, and what I’m
-          learning.
-        </p>
-        <p className="ai-trust">
-          Answers use published portfolio content.{" "}
-          {remoteAvailable
-            ? "AI phrasing is optional and processed by Cloudflare. Please don’t enter personal or confidential information."
-            : "Knowledge-only mode: no question is sent for AI inference. Please don’t enter personal or confidential information."}
-        </p>
         <div
           ref={list}
           className="ai-messages"
@@ -288,7 +286,9 @@ export default function AiChatPanel({
         >
           {!messages.length && (
             <div className="ai-welcome">
-              <p>Ask about documented work, or start here:</p>
+              <p id="ai-description">
+                Ask about my experience, projects, skills or learning.
+              </p>
               <div className="ai-suggestions">
                 {suggestions.map((prompt) => (
                   <button
@@ -301,6 +301,15 @@ export default function AiChatPanel({
                   </button>
                 ))}
               </div>
+              <p className="ai-trust">
+                {remoteAvailable
+                  ? "Answers use published content. Optional AI phrasing uses Cloudflare."
+                  : "Knowledge-only: answers come from published portfolio content."}{" "}
+                Please don’t enter confidential information.{" "}
+                <Link href="/#contact" onClick={onClose}>
+                  Contact Vardhan
+                </Link>
+              </p>
             </div>
           )}
           {messages.map((message) => (
@@ -404,12 +413,6 @@ export default function AiChatPanel({
             </button>
           </div>
         </form>
-        <footer className="ai-footer">
-          Messages stay in this tab until you reload.{" "}
-          <Link href="/#contact" onClick={onClose}>
-            Contact Vardhan
-          </Link>
-        </footer>
       </div>
     </div>
   );
