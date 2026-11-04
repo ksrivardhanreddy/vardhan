@@ -41,7 +41,7 @@ def footer(canvas,doc):
 
 p('SRIVARDHAN REDDY KOLAN','name')
 p('Senior DevOps Engineer | AWS | Kubernetes | Platform Engineering','role')
-p('Hyderabad, Telangana | +91 9700009938 | <link href="mailto:sri@srivardhanreddy.com">sri@srivardhanreddy.com</link><br/><link href="https://www.vardhan.pro">www.vardhan.pro</link> | <link href="https://www.linkedin.com/in/srivardhanreddykolan">linkedin.com/in/srivardhanreddykolan</link>','contact')
+p('Hyderabad, Telangana | +91 9700009938 | <link href="mailto:sri@vardhan.pro">sri@vardhan.pro</link><br/><link href="https://www.vardhan.pro">www.vardhan.pro</link> | <link href="https://www.linkedin.com/in/srivardhanreddykolan">linkedin.com/in/srivardhanreddykolan</link>','contact')
 story.append(HRFlowable(width='100%',thickness=1,color=COPPER,spaceAfter=2))
 section('Professional Summary')
 p('Senior DevOps Engineer with experience across cloud infrastructure, Kubernetes, CI/CD automation, Linux administration, and production operations. Hands-on experience with AWS/EKS, Terraform/Terragrunt, protected deployment workflows, observability, incident response, and root cause analysis. Focused on dependable platforms, repeatable infrastructure, and safer releases.')

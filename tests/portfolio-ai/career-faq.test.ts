@@ -33,10 +33,7 @@ const heldOut: [string, RegExp][] = [
   ["Explain employment gap please", /contact me directly/i],
   ["devops experience till now?", /8\+ years in DevOps/],
   ["DevOps experience so far?", /8\+ years in DevOps/],
-  [
-    "whats his phone number to contact him?",
-    /email me at sri@srivardhanreddy.com/,
-  ],
+  ["whats his phone number to contact him?", /email me at sri@vardhan.pro/],
   ["Why are you looking for a change please?", /better career opportunities/i],
 ];
 for (const [question, expected] of heldOut)

@@ -16,7 +16,7 @@ export function validQuestion(value: unknown): value is string {
 export function safeSourceUrl(value: string): boolean {
   return (
     /^\/(?!\/)[\w/#.?=&%-]*$/.test(value) ||
-    /^(?:https:\/\/(?:www\.)?(?:linkedin\.com|github\.com|credly\.com|rhtapps\.redhat\.com)\/[^\s<>"']+|mailto:sri@srivardhanreddy\.com)$/.test(
+    /^(?:https:\/\/(?:www\.)?(?:linkedin\.com|github\.com|credly\.com|rhtapps\.redhat\.com)\/[^\s<>"']+|mailto:sri@vardhan\.pro)$/.test(
       value,
     )
   );

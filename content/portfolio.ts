@@ -1,6 +1,6 @@
 export const profile = {
   name: "Srivardhan Reddy Kolan",
-  email: "sri@srivardhanreddy.com",
+  email: "sri@vardhan.pro",
   github: "https://github.com/ksrivardhanreddy",
   linkedin: "https://www.linkedin.com/in/srivardhanreddykolan",
   blog: "https://hashnode.vardhan.pro",
